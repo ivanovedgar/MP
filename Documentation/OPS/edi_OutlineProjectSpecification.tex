@@ -45,8 +45,11 @@
 %==============================================================================
 \section{Project description}
 %==============================================================================
-%This section should include a few reasonably detailed paragraphs explaining what the project is about. You should clearly indicate MMP Outline Project Specification Page 2 of 3 the main substance of the project, those aspects of it that are essential in making it worthwhile and the end-goals of the project.
+%This section should include a few reasonably detailed paragraphs explaining what the project is about. You should clearly indicate the main substance of the project, those aspects of it that are essential in making it worthwhile and the end-goals of the project.
 
+My final year project will contain both hardware and software parts. The aim of the project is to build an additional unit which will ensure that camera mounted on the rover is always in a stable position. Currently there is a Pan-and-Tilt Unit (PTU) which controls the camera. It uses gyroscopes to acquire the current position in the space and then adjusts the position of the camera. However gyroscopes are not perfect and tend to drift over time, as well as providing wrong data at the different temperatures. 
+
+I will be building an additional unit which will acquire current position using the more accurate accelerometer and will then provide the PTU with the calibration data. Essential my task is to write a program which will interact with the PTU and external accelerometer. The program fill fetch data from both devices and compare it. Based on the difference between PTU and accelerometer information it will calculate by how much degrees PTU should be adjusted and then will send this data back to the PTU. At the end there should be a simple interface that allows to perform calibration by just sending one command from the unit that controls the rover.    
 
 %==============================================================================
 \section{Proposed tasks}
@@ -63,6 +66,17 @@
 %to provide lower level details at this stage.
 %The areas that you work on should result in outputs, some of which will be
 %deliverables that you describe in the following section.
+As I said before major part of the work is to produce software that interacts with the PTU and accelerometer. However everything is not as simple. To interact with the PTU I will reuse some already available C++ code which used to run on Gumstix Expansion Board \cite{gumstix_com}. I will need to test it to make sure that it runs on the   
+
+\begin{itemize} \itemsep1pt \parskip0pt \parsep0pt
+\item Understand C
+\item Understand C++
+\item Write program in C and C++
+\item understand how calibration should be done
+\item how to calibrate PTU
+\item how to get data from the accelerometer
+\item Understand how to interact with Raspberyy  PI
+\end{itemize}
 
 %==============================================================================
 \section{Project deliverables}
