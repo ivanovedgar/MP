@@ -1,0 +1,131 @@
+\documentclass[11pt,fleqn,twoside]{article}
+\usepackage{makeidx}
+\makeindex
+\usepackage{palatino} %or {times} etc
+\usepackage{plain} %bibliography style 
+\usepackage{amsmath} %math fonts - just in case
+\usepackage{amsfonts} %math fonts
+\usepackage{amssymb} %math fonts
+\usepackage{lastpage} %for footer page numbers
+\usepackage{fancyhdr} %header and footer package
+\usepackage{mmpv2} 
+\usepackage{url}
+
+% the following packages are used for citations - You only need to include one. 
+%
+% Use the cite package if you are using the numeric style (e.g. IEEEannot). 
+% Use the natbib package if you are using the author-date style (e.g. authordate2annot). 
+% Only use one of these and comment out the other one. 
+%\usepackage{cite}
+%\usepackage{natbib}
+
+
+
+\begin{document}
+
+\name{Edgar Ivanov}
+\userid{edi}
+\projecttitle{Stabilisation of a Pan-and-Tilt Unit holding a camera}
+\projecttitlememoir{Stabilisation of a Pan-and-Tilt Unit holding a camera} %same as the project title or abridged version for page header
+\reporttitle{Outline Project Specification}
+\version{0.1}
+\docstatus{Draft}
+\modulecode{CS39440}
+\supervisor{Frederic Labrosse} % e.g. Neil Taylor
+\supervisorid{ffl}
+\wordcount{}
+
+%optional - comment out next line to use current date for the document
+%\documentdate{10th February 2014} 
+\mmp
+
+\setcounter{tocdepth}{3} %set required number of level in table of contents
+
+
+%==============================================================================
+\section{Project description}
+%==============================================================================
+%This section should include a few reasonably detailed paragraphs explaining what the project is about. You should clearly indicate the main substance of the project, those aspects of it that are essential in making it worthwhile and the end-goals of the project.
+
+My final year project will contain both hardware and software parts. The aim of the project is to build an additional unit which will ensure that camera mounted on the rover is always in a stable position. Currently there is a Pan-and-Tilt Unit (PTU) which controls the camera. It uses gyroscopes to acquire the current position in the space and then adjusts the position of the camera. However gyroscopes are not perfect and tend to drift over time, as well as providing wrong data at the different temperatures. 
+
+I will be building an additional unit which will acquire current position using the more accurate accelerometer and will then provide the PTU with the calibration data. Essential my task is to write a program which will interact with the PTU and external accelerometer. The program fill fetch data from both devices and compare it. Based on the difference between PTU and accelerometer information it will calculate by how much degrees PTU should be adjusted and then will send this data back to the PTU. At the end there should be a simple interface that allows to perform calibration by just sending one command from the unit that controls the rover.    
+
+%==============================================================================
+\section{Proposed tasks}
+%==============================================================================
+%This section should describe the tasks that will form the
+%major part of the work. If there is lots of research reading to be done you can
+%say so here. If there are coding techniques to learn or APIs to wrestle with
+%then you can say that too.
+%For example, if you are developing a system for mobile devices, you might
+%need to investigate different platforms before committing to the most
+%appropriate platform for the project. If so, which platforms do you expect to
+%investigate and what do you want to learn about them?
+%The list of tasks should focus on the major items of work and does not need
+%to provide lower level details at this stage.
+%The areas that you work on should result in outputs, some of which will be
+%deliverables that you describe in the following section.
+As I said before major part of the work is to produce software that interacts with the PTU and accelerometer. However everything is not as simple. To interact with the PTU I will reuse some already available C++ code which used to run on Gumstix Expansion Board \cite{gumstix_com}. I will need to test it to make sure that it runs on the   
+
+\begin{itemize} \itemsep1pt \parskip0pt \parsep0pt
+\item Understand C
+\item Understand C++
+\item Write program in C and C++
+\item understand how calibration should be done
+\item how to calibrate PTU
+\item how to get data from the accelerometer
+\item Understand how to interact with Raspberyy  PI
+\end{itemize}
+
+%==============================================================================
+\section{Project deliverables}
+%==============================================================================
+%This should list all of the key outputs that you expect
+%to produce during the project. This should normally include specified items of
+%working software, any reviews (of technology etc...) that you see as of
+%fundamental importance to the project, documentation for requirements,
+%design and testing and, of course, the progress report and the final report.
+%This list should include more than just the items that have been noted in the
+%lecture slides. You must focus on the items that you will produce for your
+%project and it might be different for your project than for another project. The
+%list might change as you continue to work on your project. This is a statement
+%of your current expectations.
+
+
+%==============================================================================
+%\section*{Your Bibliography - REMOVE this title and text for final version}
+%==============================================================================
+%Throughout the project, we expect you to
+%read resources that are relevant to your project. The majority of the reading is
+%likely to happen in the first half of the project, although you are encouraged to
+%keep reading relevant material during the whole project.
+%This section should include a list of resources that you have started reading
+%on the project. For example, your supervisor may provide you with some
+%references that give essential background to your project and you are likely to
+%need to do some preliminary reading of the scientific literature, textbooks and
+%internet material.
+%The first three sections should fit on to pages 2 and 3. The annotated bibliography
+%can start on page 3 if necessary, but it is likely that it will just be on page 4.
+%You need to include an annotated bibliography. This should list all relevant web pages, books, journals etc. that you have consulted in researching your project. Each reference should include an annotation. 
+%
+%The purpose of the section is to understand what sources you are looking at.  A correctly formatted list of items and annotations is sufficient. You might go further and make use of bibliographic tools, e.g. BibTeX in a LaTeX document, could be used to provide citations, for example \cite{NumericalRecipes} \cite{MarksPaper} \cite[99-101]{FailBlog} \cite{kittenpic_ref}.  The bibliographic tools are not a requirement, but you are welcome to use them.   
+
+%You can remove the above {\em Your Bibliography} section heading because it will be added in by the renewcommand which is part of the bibliography. The correct annotated bibliography information is provided below. 
+
+
+
+\nocite{*} % include everything from the bibliography, irrespective of whether it has been referenced.
+
+% the following line is included so that the bibliography is also shown in the table of contents. There is the possibility that this is added to the previous page for the bibliography. To address this, a newline is added so that it appears on the first page for the bibliography. 
+\newpage
+\addcontentsline{toc}{section}{Initial Annotated Bibliography} 
+
+%
+% example of including an annotated bibliography. The current style is an author date one. If you want to change, comment out the line and uncomment the subsequent line. You should also modify the packages included at the top (see the notes earlier in the file) and then trash your aux files and re-run. 
+%\bibliographystyle{authordate2annot}
+\bibliographystyle{IEEEannot}
+\renewcommand{\refname}{Annotated Bibliography}  % if you put text into the final {} on this line, you will get an extra title, e.g. References. This isn't necessary for the outline project specification. 
+\bibliography{mmp} % References file
+
+\end{document}
