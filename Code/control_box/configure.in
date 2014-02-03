@@ -1,0 +1,15 @@
+AC_INIT(configure.in)
+
+AM_INIT_AUTOMAKE(control_box, 0.1)
+
+AC_LANG_CPLUSPLUS
+AC_PROG_CXX
+AM_PROG_LIBTOOL
+
+AC_CONFIG_FILES([Makefile src/c_library/Makefile src/c_client/Makefile
+                 src/c_switches/Makefile])
+AC_CONFIG_FILES([Doxyfile])
+AC_CONFIG_FILES([box_api-config],
+                [chmod +x box_api-config])
+
+AC_OUTPUT

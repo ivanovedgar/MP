@@ -1,0 +1,43 @@
+Hi Edgar,
+
+I attach various bits of code.
+
+PTutils is a little program I wrote that does the bare minimum to start and 
+home the PTU.  It also has a command to stabilise it.
+
+ptuTASS is some files that that visiting student wrote.  This contains most 
+of the functions that are possible to send to the PTU, but not the 
+stabilisation ones. (TASS is the name of the protocol).  I would treat that 
+as a library to which you need to add a few functions (for the 
+stabilisation).  Once done, this is just an external library.
+
+I also include the documentation of the PTU.  The stabilise function that 
+allows the setting of drift compensation is *mr.  It is badly described and 
+I seem to recall that this cancels the stabilisation.  There is also a *mP, 
+not documented in the main doc but in the scan I attach.  We may have to 
+play a bit around that to find out exactly what to do.
+
+The code that runs in the control box in in control_box.tgz ;-).  In the 
+src directory you'll have the client library (c_library), a few clients and 
+the server code (onboard_box), not compiled by the Makefile as this needs 
+the whole gumstix environment to do it.  onboard_box is what will need to 
+be compiled on the Pi.  You can either add to this code or start from 
+scratch.  Whichever way, it would be good to have a client library close to 
+the one provided here in terms of functionality at least.
+
+The control box is ready (but needs to be tested).  The PTU platform is 
+currently being prepared (bolted on a mount in the DSL, being connected to 
+power and the control box.  I don't know how you want to work, but given 
+that the PTU needs to be attached to the control box, you will have to be 
+in the ISL when you want to use it.  You can either use a keyboard and 
+mouse (and screen that we'll have to find) directly on the Pi or use a 
+laptop you network with the Pi.  If you want to work directly on the Pi, 
+tell me asap so that I can find a screen.
+
+Give me a shout if you need help.
+
+Cheers,
+
+Fred
+
+P.S.  All the code is for internal use only.  Please don't distribute it.

@@ -1,0 +1,12 @@
+CC = gcc
+CFLAGS = -c -Wall
+LDFLAGS = -lnsl -lsocket
+
+switches : switches.o box_api.a
+
+switches.o : switches.c
+
+.PHONY: clean
+
+clean :
+	rm -f *.o switches

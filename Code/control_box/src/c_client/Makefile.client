@@ -1,0 +1,12 @@
+CC = gcc
+CFLAGS = -c -Wall
+LDFLAGS = -lnsl -lsocket
+
+client : client.o box_api.a
+
+client.o : client.c client.h
+
+.PHONY: clean
+
+clean :
+	rm -f *.o client

@@ -1,0 +1,5 @@
+SUBDIRS = src/c_library src/c_client src/c_switches
+
+bin_SCRIPTS = box_api-config
+
+MAINTAINERCLEANFILES = *~

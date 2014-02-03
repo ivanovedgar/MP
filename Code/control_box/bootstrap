@@ -1,0 +1,17 @@
+#! /bin/sh
+
+echo "libtoolize..."
+libtoolize --force --copy \
+    || { echo "libtoolize failed"; exit 1; }
+
+echo "aclocal..."
+aclocal \
+    || { echo "aclocal failed"; exit 1; }
+
+echo "automake..."
+automake --add-missing --copy \
+    || { echo "automake failed"; exit 1; }
+
+echo "autoconf..."
+autoconf \
+    || { echo "autoconf failed"; exit 1; }

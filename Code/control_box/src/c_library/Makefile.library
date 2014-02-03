@@ -1,0 +1,16 @@
+CC = gcc
+CFLAGS = -c -Wall
+LDFLAGS = -lnsl -lsocket
+
+distribution : box_api.a
+	tar cvf box_api.tar box_api.h box_api.a
+
+box_api.a : box_api.o
+	ar r box_api.a box_api.o ; ranlib box_api.a
+
+box_api.o : box_api.h box_api_private.h
+
+.PHONY: clean
+
+clean :
+	rm -f *.o *.a *.tar
