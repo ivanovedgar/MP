@@ -58,8 +58,11 @@ I will be building an additional unit which will acquire current position using 
 
 Tasks for this project may be divided in two parts: the first one is for hardware and the second is for software. 
 
-\subsection{Hardware}To be able to use hardware I will first of all will have to learn about it, what it is capable of, what software I can run on it, what connections does it have. The same applies to the PTU and accelerometer, I will need to exam their data-sheets to know how what commands send to them in order to make them work. The Raspberry Pi computer was chosen as a platform for the software to run on. It is more powerful piece of equipment (there was particular request from the customer to be able to compile code on the device, what was not possible on the previous hardware) than its predecessor and has I/O connections which can be used to interconnect it with other hardware. \cite{C_library_for_RPi} \cite{rpi_gpio}
+\subsection{Hardware}
+The Raspberry Pi computer was chosen as a platform for the software to run on. It is more powerful piece of equipment (there was particular request from the customer to be able to compile code on the device, what was not possible on the previous hardware) than its predecessor and has I/O connections which can be used to interconnect it with other hardware\cite{C_library_for_RPi} \cite{rpi_gpio}. 
 
+
+To be able to use hardware I will first of all will have to learn about it, what it is capable of, what software I can run on it, what connections does it have. The same applies to the PTU and accelerometer, I will need to exam their data-sheets to know how what commands send to them in order to make them work. 
 
 \subsection{Software}
 To interact with the PTU I will reuse some ready available C++ code which used to run on Gumstix Expansion Board \cite{gumstix_com}. I will need to test this code to make sure that it successfully compiles and runs on the new hardware. I will then have to enhance that code to add functionality for the calibration.
