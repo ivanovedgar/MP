@@ -19,8 +19,6 @@
 %\usepackage{cite}
 %\usepackage{natbib}
 
-
-
 \begin{document}
 
 \name{Edgar Ivanov}
@@ -49,25 +47,20 @@
 
 My final year project will contain both hardware and software parts. The aim of the project is to build an additional unit which will ensure that camera mounted on the rover is always in a stable position. Currently there is a Pan-and-Tilt Unit (PTU) which controls the camera. It uses gyroscopes to acquire the current position in the space and then adjusts the position of the camera. However gyroscopes are not perfect and tend to drift over the time, as well as providing wrong data at the different temperatures. 
 
-I will be building an additional unit which will acquire current position using the more accurate accelerometer and will then provide the PTU with the calibration data. Essential my task is to write a program which will interact with the PTU and external accelerometer. The program fill fetch data from both devices and compare it. Based on the difference between PTU and accelerometer information it will calculate by how much degrees PTU should be adjusted and then will send this calibration data back to the PTU. At the end there should be a simple interface that allows to perform calibration by just sending one command from the unit that controls the rover.    
+I will be building an additional unit which will acquire current position using the more accurate inclinometer and then will provide the PTU with the calibration data. Essential my task is to write a program which will interact with the PTU and inclinometer. The program fill fetch data from both devices and compare it. Based on the difference between PTU and inclinometer information it will calculate by how much degrees PTU should be adjusted and then will send this calibration data to the PTU. At the end there should be a simple interface that allows to perform calibration by just sending one command from the unit that controls the rover.    
 
 %==============================================================================
 \section{Proposed tasks}
 %==============================================================================
 %This section should describe the tasks that will form the major part of the work. If there is lots of research reading to be done you can say so here. If there are coding techniques to learn or APIs to wrestle with then you can say that too. For example, if you are developing a system for mobile devices, you might need to investigate different platforms before committing to the most appropriate platform for the project. If so, which platforms do you expect to investigate and what do you want to learn about them? The list of tasks should focus on the major items of work and does not need to provide lower level details at this stage. The areas that you work on should result in outputs, some of which will be deliverables that you describe in the following section.
 
-Tasks for this project may be divided in two parts: the first one is for hardware and the second is for software. 
+Tasks for this project may be divided in to two parts: the first part is about the hardware and the second is about the software. 
 
 \subsection{Hardware}
-The Raspberry Pi computer was chosen as a platform for the software to run on. It is more powerful piece of equipment (there was particular request from the customer to be able to compile code on the device, what was not possible on the previous hardware) than its predecessor and has I/O connections which can be used to interconnect it with other hardware\cite{C_library_for_RPi} \cite{rpi_gpio}. 
-
-
-To be able to use hardware I will first of all will have to learn about it, what it is capable of, what software I can run on it, what connections does it have. The same applies to the PTU and accelerometer, I will need to exam their data-sheets to know how what commands send to them in order to make them work. 
+Essentially there will be three pieces of hardware used in this project: the Raspberry Pi (RPi) computer, PTU and inclinometer. RPi will be used as a platform for the software to run on and it will be connected to the PTU and inclinometer to control them. Pan-and-Tilt Unit will be be communicating with RPi using serial connection and inclinometer connected using \begin{math}I^2 C\end{math} bus. For this part of the project I will need to do some research about the RPi, PTU and inclinometer to understand how they should be properly wired to make them work. In particular it means reading data sheets for these devices, examining connection diagrams.
 
 \subsection{Software}
-To interact with the PTU I will reuse some ready available C++ code which used to run on Gumstix Expansion Board \cite{gumstix_com}. I will need to test this code to make sure that it successfully compiles and runs on the new hardware. I will then have to enhance that code to add functionality for the calibration.
-
-Raspberry Pi has GPIO (general purpose input output) pins which will be used to connect to the PTU and accelerometer. I will need to learn how to program and use them.    
+I was given the C++ code which has implemented functionality to control the PTU, so my first task will be to make sure that this code can be compiled and run on the RPi computer. However this implementation is missing one, essential for this project, piece of code which calibrates the PTU. My second task will be to find what functions are to stabilize with drift compensation and implement them in the code. Then I can treat this code as a complete module and make calls to it when I need. The third task is to write code that takes readings from the inclinometer. This data then will be used to calibrate PTU. Following tasks will be to write server code which connects everything together      
 
 \begin{itemize} \itemsep1pt \parskip0pt \parsep0pt
 \item Understand C
@@ -84,7 +77,6 @@ Learn how to work with serial interface
        3 measure inclinometer
        learn how to communicate thru serial port
        
- 
 %==============================================================================
 \section{Project deliverables}
 %==============================================================================
@@ -98,7 +90,6 @@ Learn how to work with serial interface
 %project and it might be different for your project than for another project. The
 %list might change as you continue to work on your project. This is a statement
 %of your current expectations.
-
 
 %==============================================================================
 %\section*{Your Bibliography - REMOVE this title and text for final version}
@@ -114,25 +105,22 @@ Learn how to work with serial interface
 %internet material.
 %The first three sections should fit on to pages 2 and 3. The annotated bibliography
 %can start on page 3 if necessary, but it is likely that it will just be on page 4.
-%You need to include an annotated bibliography. This should list all relevant web pages, books, journals etc. that you have consulted in researching your project. Each reference should include an annotation. 
-%
+%You need to include an annotated bibliography. This should list all relevant web pages, books, journals etc. that you have consulted in researching your project. Each reference should include an annotation.
+
 %The purpose of the section is to understand what sources you are looking at.  A correctly formatted list of items and annotations is sufficient. You might go further and make use of bibliographic tools, e.g. BibTeX in a LaTeX document, could be used to provide citations, for example \cite{NumericalRecipes} \cite{MarksPaper} \cite[99-101]{FailBlog} \cite{kittenpic_ref}.  The bibliographic tools are not a requirement, but you are welcome to use them.   
 
 %You can remove the above {\em Your Bibliography} section heading because it will be added in by the renewcommand which is part of the bibliography. The correct annotated bibliography information is provided below. 
 
-
-
 \nocite{*} % include everything from the bibliography, irrespective of whether it has been referenced.
 
-% the following line is included so that the bibliography is also shown in the table of contents. There is the possibility that this is added to the previous page for the bibliography. To address this, a newline is added so that it appears on the first page for the bibliography. 
+% the following line is included so that the bibliography is also shown in the table of contents. There is the possibility that this is added to the previous page for the bibliography. To address this, a newline is added so that it appears on the first page for the bibliography.
 \newpage
-\addcontentsline{toc}{section}{Initial Annotated Bibliography} 
+\addcontentsline{toc}{section}{Initial Annotated Bibliography}
 
-%
-% example of including an annotated bibliography. The current style is an author date one. If you want to change, comment out the line and uncomment the subsequent line. You should also modify the packages included at the top (see the notes earlier in the file) and then trash your aux files and re-run. 
+% example of including an annotated bibliography. The current style is an author date one. If you want to change, comment out the line and uncomment the subsequent line. You should also modify the packages included at the top (see the notes earlier in the file) and then trash your aux files and re-run.
 %\bibliographystyle{authordate2annot}
 \bibliographystyle{IEEEannot}
-\renewcommand{\refname}{Annotated Bibliography}  % if you put text into the final {} on this line, you will get an extra title, e.g. References. This isn't necessary for the outline project specification. 
+\renewcommand{\refname}{Annotated Bibliography}  % if you put text into the final {} on this line, you will get an extra title, e.g. References. This isn't necessary for the outline project specification.
 \bibliography{mmp} % References file
 
 \end{document}
