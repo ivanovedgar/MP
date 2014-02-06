@@ -56,40 +56,19 @@ I will be building an additional unit which will acquire current position using 
 
 Tasks for this project may be divided in to two parts: the first part is about the hardware and the second is about the software. 
 
-\subsection{Hardware}
-Essentially there will be three pieces of hardware used in this project: the Raspberry Pi (RPi) computer, PTU and inclinometer. RPi will be used as a platform for the software to run on and it will be connected to the PTU and inclinometer to control them. Pan-and-Tilt Unit will be be communicating with RPi using serial connection and inclinometer connected using \begin{math}I^2 C\end{math} bus. For this part of the project I will need to do some research about the RPi, PTU and inclinometer to understand how they should be properly wired to make them work. In particular it means reading data sheets for these devices, examining connection diagrams.
+\subsection{Hardware tasks}
+Essentially there will be three pieces of hardware used in this project: the Raspberry Pi (RPi) computer, PTU and inclinometer, there also will be some relays to turn on and off PTU as well as GPIO14 chip to convert data from the analogue to digital format. RPi will be used as a platform for the software to run on and it will be connected to the PTU and inclinometer to control them. Pan-and-Tilt Unit will be communicating with RPi using serial connection and inclinometer will be connected (throughout GPIO14 chip) using \begin{math}I^2 C\end{math} bus. For this part of the project I will need to do some research about the RPi, PTU and inclinometer to understand how they should be properly wired to make them work. In particular it means reading data sheets for these devices, examining connection diagrams, understanding commands.
 
-\subsection{Software}
-I was given the C++ code which has implemented functionality to control the PTU, so my first task will be to make sure that this code can be compiled and run on the RPi computer. However this implementation is missing one, essential for this project, piece of code which calibrates the PTU. My second task will be to find what functions are to stabilize with drift compensation and implement them in the code. Then I can treat this code as a complete module and make calls to it when I need. The third task is to write code that takes readings from the inclinometer. This data then will be used to calibrate PTU. Following tasks will be to write server code which connects everything together      
-
-\begin{itemize} \itemsep1pt \parskip0pt \parsep0pt
-\item Understand C
-\item Understand C++
-\item Write program in C and C++
-\item understand how calibration should be done
-\item how to calibrate PTU
-\item how to get data from the accelerometer
-\item Understand how to interact with Raspberyy  PI
-Learn how to work with serial interface
-\end{itemize}
- Tasks: 1 make current code to compile.
-       2 understand waht functions send to PTU to stabilize with drift compensation it and to ptutass library find what the functions are are to stabilize with drift compensation
-       3 measure inclinometer
-       learn how to communicate thru serial port
-       
+\subsection{Software tasks}
+I was given the C++ code which has implemented functionality to control the PTU, so my first task will be to make sure that this code can be compiled and run on the RPi computer. However this implementation is missing one, essential for this project, piece of code which calibrates the PTU. My second task will be to find what functions are to stabilize with drift compensation and implement them in the code. Then I can treat this code as a complete module and make calls to it when I need. The third task is to write code that takes readings from the inclinometer. This data then will be used to calibrate PTU. Following tasks will be to write server code which connects everything together and respond to the calibration requests from the main computer.   
 %==============================================================================
 \section{Project deliverables}
 %==============================================================================
-%This should list all of the key outputs that you expect
-%to produce during the project. This should normally include specified items of
-%working software, any reviews (of technology etc...) that you see as of
-%fundamental importance to the project, documentation for requirements,
-%design and testing and, of course, the progress report and the final report.
-%This list should include more than just the items that have been noted in the
-%lecture slides. You must focus on the items that you will produce for your
-%project and it might be different for your project than for another project. The
-%list might change as you continue to work on your project. This is a statement
-%of your current expectations.
+%This should list all of the key outputs that you expect to produce during the project. This should normally include specified items of working software, any reviews (of technology etc...) that you see as of fundamental importance to the project, documentation for requirements, design and testing and, of course, the progress report and the final report. This list should include more than just the items that have been noted in the lecture slides. You must focus on the items that you will produce for your project and it might be different for your project than for another project. The list might change as you continue to work on your project. This is a statement of your current expectations.
+
+During the course of this project the will by multiple deliverables, the most obvious are: this project outline specification, mid-project demonstration, final report and final demonstration.
+
+
 
 %==============================================================================
 %\section*{Your Bibliography - REMOVE this title and text for final version}
