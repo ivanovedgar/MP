@@ -27,13 +27,13 @@
 \projecttitle{Stabilisation of a Pan-and-Tilt Unit holding a camera}
 \projecttitlememoir{Stabilisation of a Pan-and-Tilt Unit holding a camera} %same as the project title or abridged version for page header
 \reporttitle{Outline Project Specification}
-\version{0.1}
-\docstatus{Draft}
+\version{1.0}
+\docstatus{Released}
 \modulecode{CS39440}
 \degreeschemecode{G421}
 \degreeschemename{Ubiquitos Computing}
 \supervisor{Frederic Labrosse} % e.g. Neil Taylor
-\supervisorid{FFL}
+\supervisorid{ffl}
 \wordcount{}
 
 %optional - comment out next line to use current date for the document
@@ -46,41 +46,39 @@
 %==============================================================================
 \section{Project description}
 %==============================================================================
-My final year project will contain both hardware and software parts. The aim of the project is to build an additional unit which will ensure that camera mounted on the rover is always in a stable position. Currently there is a Pan-and-Tilt Unit (PTU) which controls the camera. It uses gyroscopes to acquire the current position in the space and then adjusts the position of the camera. However gyroscopes are not perfect and tend to drift over the time, as well as providing wrong data at the different temperatures. 
+My final year project will contain both hardware and software parts. The aim of the project is to build an additional unit which will ensure that camera mounted on the rover is always in a stable position. Currently there is a Pan-and-Tilt Unit (PTU) which controls the camera. It uses gyroscopes to acquire the current position in the space and adjust the position of the camera. However gyroscopes are not perfect and tend to drift over the time, as well as providing wrong data at different temperatures.
 
-I will be building an additional unit which will acquire current position using the more accurate inclinometer and then will provide the PTU with the calibration data. Essential my task is to write a program which will interact with the PTU and inclinometer. The program fill fetch data from both devices and compare it. Based on the difference between PTU and inclinometer information it will calculate by how much degrees PTU should be adjusted and then will send this calibration data to the PTU. At the end there should be a simple interface that allows to perform cali bration by just sending one command from the unit that controls the rover.   
-
+I will be building an additional unit which will acquire current position using the more accurate inclinometer and then will provide the PTU with the calibration data. Essential my task is to write a program which will interact with the PTU and inclinometer. The program will fetch data from both devices and compare it. Based on the difference between PTU and inclinometer information it will calculate by how much degrees PTU should be adjusted and then will send this calibration data to the PTU. At the end of the project there should be a simple interface that allows to perform calibration by just sending one command from the unit that controls the rover.
 %==============================================================================
 \section{Proposed tasks}
 %==============================================================================
-Tasks for this project may be divided in to two parts: the first part is about the hardware and the second is about the software. 
+The tasks for this project may be divided into two parts: the first part is about the hardware and the second is about the software. 
 
 \subsection{Hardware tasks}
-Essentially there will be three pieces of hardware used in this project: the Raspberry Pi (RPi) computer, PTU and inclinometer, there also will be some relays to turn on and off PTU as well as GPIO14 chip to convert data from the analogue to digital format. RPi will be used as a platform for the software to run on and it will be connected to the PTU and inclinometer to control them. Pan-and-Tilt Unit will be communicating with RPi using serial connection and inclinometer will be connected (throughout GPIO14 chip) using \begin{math}I^2 C\end{math} bus. For this part of the project I will need to do some research about the RPi, PTU and inclinometer to understand how they should be properly wired to make them work. In particular it means reading data sheets for these devices, examining connection diagrams, understanding commands.
+There will essentially be three pieces of the hardware used in this project: the Raspberry Pi computer (RPi), PTU and an inclinometer; there will also be some relays to turn on and off PTU as well as GPIO14 chip to convert the data from the analogue to digital format. The RPi computer will be used as a platform for the controlling software to run on; PTU and inclinometer will be connected to the RPi through GPIO pins. 
+
+For this part of the project I will need to do some research about the RPi, PTU and inclinometer to understand how they should be properly wired to make them work. In particular it means reading data sheets for these devices, examining connection diagrams and understanding commands.
 
 \subsection{Software tasks}
-I was given the C++ code which has implemented functionality to control the PTU, so my first task will be to make sure that this code can be compiled and run on the RPi computer. However this implementation is missing one, essential for this project, piece of code which calibrates the PTU. My second task will be to find what functions are to stabilize with drift compensation and implement them in the code. Then I can treat this code as a complete module and make calls to it when I need. The third task is to write code that takes readings from the inclinometer. This data then will be used to calibrate PTU. Following tasks will be to write server code which connects everything together and respond to the calibration requests from the main computer.
+The main part of my project is about moving current code to the new platform, adding new functionality to it and writing new control modules for some parts. The code that I currently have is a C code which used to run on the Gumstix computer. It controls relays that are used to switch on and off the devices; it has access to an inclinometer and controls PTU (will be further called the AberBox). My first task is to compile this code on the new platform and make sure that it runs. There are a few clients available to interact with the AberBox, they are written in C and Java. I will run those clients on the external PC connected to the RPi through network and check if they can talk to the AberBox.  
+
+I have also got the code written by the former PhD student who has implemented the functions to control the Pan-and-Tilt Unit using TASS commands. Generally it has all the functionality I need except one: it is missing the stabilization function with the drift compensations. My second task is about finding what functions the are to stabilize with drift compensation and implementing them in the code (code in ptuTASS folder). I can then treat this code as a library and make calls to it from the other modules when I need.
+
+Following tasks will concentrate on adding implementation for the external application to request stabilization with the drift compensation. I will also have to think about how stabilization with drift compensation should be implemented, logics and mathematics behind it. 
 
 %==============================================================================
 \section{Project deliverables}
 %==============================================================================
-During the course of this project there will by multiple deliverables, the most obvious are: outline project specification, mid-project demonstration, final report and final demonstration. Most of the deliverables are derived dirsctly from the tasks that  I listed before. Code deliverables for this project may be devided in to several parts, first deliverable will be implementation of the PTU calibration function what will allow to treat that part of the code as a library, second one is module which will talk to the inclinometer and acquire current position, third deliverable will be  main system which controls everything and resoonds to the calibration request from texternal applications.
+During the course of this project there will by multiple deliverables, which will indicate the progress of the project. Below is a list of the deliverables that I could think of at the moment:  
 
-% Start to comment out / remove the following lines. They are only provided for instruction for this example template.  You don't need the following section title, because it will be added as part of the bibliography section. 
-%
-%==============================================================================
-\section*{Your Bibliography - REMOVE this title and text for final version}
-%==============================================================================
-%
-You need to include an annotated bibliography. This should list all relevant web pages, books, journals etc. that you have consulted in researching your project. Each reference should include an annotation. 
-
-The purpose of the section is to understand what sources you are looking at.  A correctly formatted list of items and annotations is sufficient. You might go further and make use of bibliographic tools, e.g. BibTeX in a LaTeX document, could be used to provide citations, for example \cite{NumericalRecipes} \cite{MarksPaper} \cite[99-101]{FailBlog} \cite{kittenpic_ref}.  The bibliographic tools are not a requirement, but you are welcome to use them.   
-
-You can remove the above {\em Your Bibliography} section heading because it will be added in by the renewcommand which is part of the bibliography. The correct annotated bibliography information is provided below. 
-%
-% End of comment out / remove the lines. They are only provided for instruction for this example template. 
-%
-
+\begin{description}
+   \item[Outline Project Specification] - this document is describing the nature of the project, it tasks, the deliverables; it also contains annotated bibliography.
+   \item[Final system] The final system should successfully perform the tasks it was designed for. 
+   \item[Final report] The final report contains the description of the problem, its goals, system requirements, the design, implementation and the testing techniques. It will also list the issues I faced during the project and the way they were solved, the end section will include conclusions with self evaluation parts and bibliography.  
+   \item[Final demonstration] The aim of the final demonstration is to present complete, working system to the project supervisor and the second marker. During the presentation I will have to demonstrate that goals of the project have been achieved.
+   \item[Code porting] This will demonstrate that code was successfully ported on to the new platform and works properly. 
+   \item[Stabilization function] Implementation of the stabilization with drift compensation function.
+\end{description}
 
 \nocite{*} % include everything from the bibliography, irrespective of whether it has been referenced.
 
@@ -88,11 +86,9 @@ You can remove the above {\em Your Bibliography} section heading because it will
 \newpage
 \addcontentsline{toc}{section}{Initial Annotated Bibliography} 
 
-%
 % example of including an annotated bibliography. The current style is an author date one. If you want to change, comment out the line and uncomment the subsequent line. You should also modify the packages included at the top (see the notes earlier in the file) and then trash your aux files and re-run. 
 %\bibliographystyle{authordate2annot}
 \bibliographystyle{IEEEannot}
 \renewcommand{\refname}{Annotated Bibliography}  % if you put text into the final {} on this line, you will get an extra title, e.g. References. This isn't necessary for the outline project specification. 
 \bibliography{mmp} % References file
-
 \end{document}
