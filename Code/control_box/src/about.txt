@@ -1,0 +1,4 @@
+onboard_box - runs on the RPi (used to run on Gumstix), needs to be compiled and checked on RPi.
+java_client, c_client different implementations of the client to speak to the on-board box, they all use c_library.
+c_library - interface to interact with the onboard_box running on the PRi ?
+c_switches - interacts with the onboard_box and triggers all relays
