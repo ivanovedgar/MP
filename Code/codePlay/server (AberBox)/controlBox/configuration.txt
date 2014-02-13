@@ -1,0 +1,5 @@
+side_side_midpoint 513.0
+side_side_half_range 411.0
+fore_aft_midpoint 516.0
+fore_aft_half_range 408.0
+number_to_average 1
