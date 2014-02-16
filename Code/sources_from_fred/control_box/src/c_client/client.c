@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "./c_library/box_api.h"
+#include "box_api.h"
 #include "client.h"
 
 int main()

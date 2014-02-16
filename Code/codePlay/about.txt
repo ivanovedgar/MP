@@ -1,3 +1,0 @@
-This folder contains code for the server and client.
-Server part is running on the AberBox(RaspberryPi computer).
-Client on any other computer which has network connectivity to the AberBox(the are two client in C and Java,)
