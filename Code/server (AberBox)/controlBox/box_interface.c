@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
 	/* --- Malloc the space to the required data --- */
 
 	/* --- Set up the communication port information --- */
-    	comms.server_ip_address = "192.168.0.1";          	/* server IP address  */
+     	comms.server_ip_address = "192.168.0.1";          	/* server IP address  */
     	comms.port = 4675;	/* server PORT address */
 	printf("Port %d\n", comms.port);
 	/* --- Create socket for incoming connections --- */

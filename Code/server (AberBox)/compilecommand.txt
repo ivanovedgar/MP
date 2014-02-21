@@ -1,1 +1,0 @@
-gcc box_interface.c gpio14.c inclinometer_control.c relay_control.c -o ControlBox -lwiringPi -lm
