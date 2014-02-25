@@ -11,8 +11,7 @@
 #include <arpa/inet.h>
 #include <math.h>
 //#include "hp_sleep.h"
-//#include "i2c.h"
-#include <wiringPiI2C.h>
+#include "i2c.h"
 #include "gpio14.h"
 //#include "read_sentence.h"
 #include "inclinometer_control.h"
@@ -46,9 +45,6 @@ attitude get_inclinometer()
 
 	chan0 = 0.0;
 	chan1 = 0.0;
-        
-        printf("First: %f ", gpio14_read_a2d(1, 0));
-	printf("Second: %f ",gpio14_read_a2d(1, 1));
 
 	if (number_to_average >0 ) {
 	  for (i = 0; i < number_to_average; i++)
@@ -58,7 +54,6 @@ attitude get_inclinometer()
 	  }
 	  chan0 /= (double) number_to_average;
 	  chan1 /= (double) number_to_average;
-        
 
 	  temp0 = (chan0 - calib_array[0].offset) / calib_array[0].half_range;
 	  temp1 = (chan1 - calib_array[1].offset) / calib_array[1].half_range;

@@ -12,7 +12,6 @@
 #include <math.h>
 //#include "hp_sleep.h"
 //#include "i2c.h"
-#include <wiringPiI2C.h>
 //#include "gps.h"
 #include "gpio14.h"
 //#include "read_sentence.h"
@@ -25,7 +24,7 @@
 #define HALF_RANGE_CHAN_1 (408.0)
 #define CENTRE_CHAN_1 (516.0)
 
-/* #define DEBUG */
+#define DEBUG
 
 typedef struct {
        double fore_aft;
@@ -139,13 +138,15 @@ int main(int argc,char **argv)
 	gps_capture=atoi(argv[5]);
 	gps_dataindex=atoi(argv[6]);
 
-	gpio14_init();
+	/* gpio14_init(); */
 	gpio14_select_unit(GPIO14_UNIT_1);
-	gpio14_setup_a2d(RIGHT_JUSTIFY_MASK, ALL_ANALOUGE);
+// 	gpio14_select_unit(GPIO14_UNIT_0);
+	/* gpio14_setup_a2d(RIGHT_JUSTIFY_MASK, ALL_ANALOUGE); */
+	gpio14_setup_a2d(RIGHT_JUSTIFY_MASK, THREE_ANALOUGE);
 
 	inclinometer = get_inclinometer(inclino_skip,channel_calibration); /* throw these away */
 
-/*     while (1) { /* temp loop so I can watch inclinometer */
+     while (1) { /* temp loop so I can watch inclinometer */
 	inclinometer = get_inclinometer(inclino_capture,channel_calibration); /* and then use these */
 
 #ifdef DEBUG
@@ -153,8 +154,8 @@ int main(int argc,char **argv)
 #endif
 
 	fprintf(log,"%5d %+07.3f %+07.3f ", gps_dataindex, inclinometer.side_side, inclinometer.fore_aft);
-	/* sleep(1); */
-/*     } /* end of temp loop */
+	 sleep(1);
+     } /* end of temp loop */
 
 	if (gps_capture > 0 ) {
 	  /* setup_GPS(speed,device); */

@@ -35,7 +35,9 @@ typedef struct {
 	struct sockaddr_in client_address; 	/*  server address */    
 } COM_STRUCT;
 
-float ConvertFloatChar(float comfloat);
-float ConvertCharFloat(char* mess);
+// float ConvertFloatChar(float comfloat);
+// float ConvertCharFloat(char* mess);
+void ConvertFloatString(float comfloat, char* comstring);
+void ConvertStringFloat(char* comstring, float* mess);
 int ConvertCharInt(char* mess);
 void ERROR_Message(char *error);

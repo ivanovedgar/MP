@@ -2,10 +2,8 @@
 Gumstix routines for the GPIO14
 */
 #include <stdio.h>
-//#include "hp_sleep.h"
-//#include "i2c/i2c.h"
-#include <wiringPiI2C.h>
-#include "wiringPi.h"
+#include "hp_sleep.h"
+#include "i2c/i2c.h"
 #include "gpio14.h"
 
 /* Global Variables */
