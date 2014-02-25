@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/staff/dap/research/!svn/ver/14/software/control_box/trunk/src/onboard_box/i2c
+END
+i2c.h
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/staff/dap/research/!svn/ver/14/software/control_box/trunk/src/onboard_box/i2c/i2c.h
+END
+i2c-api.c
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/staff/dap/research/!svn/ver/14/software/control_box/trunk/src/onboard_box/i2c/i2c-api.c
+END
+Config.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/staff/dap/research/!svn/ver/14/software/control_box/trunk/src/onboard_box/i2c/Config.h
+END
+i2c.c
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/staff/dap/research/!svn/ver/14/software/control_box/trunk/src/onboard_box/i2c/i2c.c
+END

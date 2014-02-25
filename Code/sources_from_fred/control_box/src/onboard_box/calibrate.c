@@ -10,19 +10,17 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <math.h>
-//#include "hp_sleep.h"
-//#include "i2c.h"
-//#include "gps.h"
+#include "hp_sleep.h"
+#include "i2c.h"
 #include "gpio14.h"
-//#include "read_sentence.h"
 
 
 /* chan0 is side-side inclinometer Y-axis*/
 #define HALF_RANGE_CHAN_0 (411.0)
-#define CENTRE_CHAN_0 (511.5)
+#define CENTRE_CHAN_0 (512.0)
 /* chan1 is fore-aft inclinometer X-axis*/
 #define HALF_RANGE_CHAN_1 (408.0)
-#define CENTRE_CHAN_1 (516.0)
+#define CENTRE_CHAN_1 (518.0)
 
 #define DEBUG
 
@@ -54,6 +52,10 @@ attitude get_inclinometer(int count, calibration * calib_array)
 	  {
 		chan0 += gpio14_read_a2d(1, 0);
 		chan1 += gpio14_read_a2d(1, 1);
+#ifdef DEBUG
+	  	printf("Raw a2d chan0 = %8.2f:: chan1 = %8.2f\n", chan0, chan1);
+	  	temp0 = 1.0;
+#endif
 	  }
 	  chan0 /= (double) count;
 	  chan1 /= (double) count;
@@ -100,21 +102,8 @@ attitude get_inclinometer(int count, calibration * calib_array)
 
 int main(int argc,char **argv)
 {
-	int i = 0;
 	attitude inclinometer;
-	int inclino_skip=50;
-	int inclino_capture=50;
-
-	char *currstr;
-	gps_GGA *fix=NULL;
-	int gps_capture=10;
-	int gps_dataindex=0;
-	int gps_speed=0;
-
-	FILE * log;
-
-	double average_northing=0.0, average_easting=0.0;
-	double average_altitude=0.0;
+	int inclino_capture=1;
 
 	calibration channel_calibration[2]= { {HALF_RANGE_CHAN_0, CENTRE_CHAN_0},
 					      {HALF_RANGE_CHAN_1, CENTRE_CHAN_1}};
@@ -123,28 +112,15 @@ int main(int argc,char **argv)
 	printf("Dave's version, argc = %d\n", argc);
 #endif
 
-	if (argc != 7) {
-	  printf("Usage: inclinometer filename inclino_skip inclino_capture gps_speed gps_capture index_number\n");
+	if (argc != 1) {
+	  printf("Usage: calibrate\n");
 	  return -1;
 	}
 	
 	set_options(channel_calibration);
 
-	if((log = fopen(argv[1],"a"))==NULL) return -2;
-
-	inclino_skip=atoi(argv[2]);
-	inclino_capture=atoi(argv[3]);
-	gps_speed=atoi(argv[4]);
-	gps_capture=atoi(argv[5]);
-	gps_dataindex=atoi(argv[6]);
-
-	/* gpio14_init(); */
 	gpio14_select_unit(GPIO14_UNIT_1);
-// 	gpio14_select_unit(GPIO14_UNIT_0);
-	/* gpio14_setup_a2d(RIGHT_JUSTIFY_MASK, ALL_ANALOUGE); */
 	gpio14_setup_a2d(RIGHT_JUSTIFY_MASK, THREE_ANALOUGE);
-
-	inclinometer = get_inclinometer(inclino_skip,channel_calibration); /* throw these away */
 
      while (1) { /* temp loop so I can watch inclinometer */
 	inclinometer = get_inclinometer(inclino_capture,channel_calibration); /* and then use these */
@@ -153,55 +129,9 @@ int main(int argc,char **argv)
 	printf("\nside_side: %f fore_aft: %f\n", inclinometer.side_side, inclinometer.fore_aft);
 #endif
 
-	fprintf(log,"%5d %+07.3f %+07.3f ", gps_dataindex, inclinometer.side_side, inclinometer.fore_aft);
 	 sleep(1);
      } /* end of temp loop */
 
-	if (gps_capture > 0 ) {
-	  /* setup_GPS(speed,device); */
-	  setup_GPS( gps_speed, "/dev/ttyS2");
-#ifdef DEBUG
-			printf("GPS setup: gps_fd = %d\n", gps_fd);
-#endif
-
-	  for (i = 0; i < gps_capture; i++)
-	  {
-		while (((fix = process_gps_sentence( currstr = read_nmea_sentence(gps_fd)))==NULL) || (fix->valid ==0))
-#ifdef DEBUG
-			 { if( fix != NULL )
-			          printf("still awaiting GPS fix, valid = %d\n", fix->valid);
-			   else
-			          printf("still awaiting GPS fix, process_gps_sentence returned null\n");
-#endif
-	 	            /*do nothing */ ;
-#ifdef DEBUG
-			 }
-#endif
-#ifdef DEBUG
-			printf("northing=%f easting=%f time %s altitude %f altitude units %c fix validity %c\n",
-			fix->degrees_north, fix->degrees_east, fix->time, fix->altitude, fix->AUNITS, fix->valid);
-#endif
-			average_northing += fix->degrees_north;
-			average_easting += fix->degrees_east;
-			average_altitude += fix->altitude;
-	  }
-
-	  average_northing /= gps_capture;
-	  average_easting /= gps_capture;
-	  average_altitude /= gps_capture;
-	} else {
-	  /* They asked for no GPS values so leave averages as initialized */
-	  /* Need to fill in a couple of fields in a dummy fix though */
-	  fix = calloc(1, sizeof(gps_GGA));
-	  fix->AUNITS = 'Z';
-	  strcpy(fix ->time, "000.0000");
-        }
-
-	fprintf(log,"%+013.8f %+013.8f %+013.8f %c %s\n",
-	average_northing, average_easting, average_altitude,fix->AUNITS, fix->time);
-	
-	fclose(log);
-	
 	return 0;
 }
 /***************************************************************************

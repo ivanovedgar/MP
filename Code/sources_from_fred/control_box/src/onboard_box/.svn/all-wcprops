@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/staff/dap/research/!svn/ver/15/software/control_box/trunk/src/onboard_box
+END
+relay_control.h
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/staff/dap/research/!svn/ver/4/software/control_box/trunk/src/onboard_box/relay_control.h
+END
+configuration.txt
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/staff/dap/research/!svn/ver/4/software/control_box/trunk/src/onboard_box/configuration.txt
+END
+calibrate.c
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/staff/dap/research/!svn/ver/15/software/control_box/trunk/src/onboard_box/calibrate.c
+END
+box_interface.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/staff/dap/research/!svn/ver/16/software/control_box/trunk/src/onboard_box/box_interface.c
+END
+inclinometer.c
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/staff/dap/research/!svn/ver/15/software/control_box/trunk/src/onboard_box/inclinometer.c
+END
+inclinometer_control.c
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/staff/dap/research/!svn/ver/15/software/control_box/trunk/src/onboard_box/inclinometer_control.c
+END
+switches.c
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/staff/dap/research/!svn/ver/15/software/control_box/trunk/src/onboard_box/switches.c
+END
+relay_control.c
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/staff/dap/research/!svn/ver/15/software/control_box/trunk/src/onboard_box/relay_control.c
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/staff/dap/research/!svn/ver/14/software/control_box/trunk/src/onboard_box/Makefile
+END
+box_interface.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/staff/dap/research/!svn/ver/16/software/control_box/trunk/src/onboard_box/box_interface.h
+END
+inclinometer_control.h
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/staff/dap/research/!svn/ver/4/software/control_box/trunk/src/onboard_box/inclinometer_control.h
+END
