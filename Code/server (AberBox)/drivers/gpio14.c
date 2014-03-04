@@ -1,9 +1,10 @@
 /**
-Gumstix routines for the GPIO14
+RPi routines for the GPIO14
 */
 #include <stdio.h>
+#include <wiringPiI2C.h>
+#include "wiringPi.h"
 #include "hp_sleep.h"
-#include "i2c/i2c.h"
 #include "gpio14.h"
 
 /* Global Variables */
@@ -12,13 +13,13 @@ static uint8_t porta_mask;
 static uint8_t portb_mask;
 static uint8_t porta;
 static uint8_t portb;
+static int fd;
 
 void gpio14_init(void)
 {
-    i2c_init(address);
-    porta = i2c_read_byte(GPIO14_PORTA);
-    portb = i2c_read_byte(GPIO14_PORTB);
-
+    fd = wiringPiI2CSetup(address);
+    porta = wiringPiI2CReadReg8(fd,GPIO14_PORTA);
+    portb = wiringPiI2CReadReg8(fd,GPIO14_PORTB);
 }
 
 /*
@@ -26,7 +27,7 @@ execute a command on the gpio14's command register
 */
 void gpio14_command(uint8_t command)
 {
-    i2c_write_byte(GPIO14_COMMAND,command);
+    wiringPiI2CWriteReg8(fd,GPIO14_COMMAND,command);
 }
 
 /*
@@ -39,12 +40,12 @@ void gpio14_enable_output(uint8_t port,uint8_t pin)
         case 'A':
             //clear the appropriate bit
             porta_mask &= ~(1<<pin);
-            i2c_write_byte(GPIO14_PORTA_MASK,porta_mask);
+            wiringPiI2CWriteReg8(fd,GPIO14_PORTA_MASK,porta_mask);
             break;
         case 'B':
             //clear the appropriate bit
             portb_mask &= ~(1<<pin);
-            i2c_write_byte(GPIO14_PORTB_MASK,portb_mask);
+            wiringPiI2CWriteReg8(fd,GPIO14_PORTB_MASK,portb_mask);
             break;
     }
 }
@@ -59,12 +60,12 @@ void gpio14_enable_input(uint8_t port,uint8_t pin)
         case 'A':
             //set the appropriate bit
             porta_mask |= (1<<pin);
-            i2c_write_byte(GPIO14_PORTA_MASK,porta_mask);
+            wiringPiI2CWriteReg8(fd,GPIO14_PORTA_MASK,porta_mask);
             break;
         case 'B':
             //set the appropriate bit
             portb_mask |= (1<<pin);
-            i2c_write_byte(GPIO14_PORTB_MASK,portb_mask);
+            wiringPiI2CWriteReg8(fd,GPIO14_PORTB_MASK,portb_mask);
             break;
     }
 }
@@ -79,11 +80,11 @@ void gpio14_set_pin(uint8_t port,uint8_t pin)
     {
         case 'A':
             porta |= (1<<pin);
-            i2c_write_byte(GPIO14_PORTA,porta);
+            wiringPiI2CWriteReg8(fd,GPIO14_PORTA,porta);
             break;
         case 'B':
             portb |= (1<<pin);
-            i2c_write_byte(GPIO14_PORTB,portb);
+            wiringPiI2CWriteReg8(fd,GPIO14_PORTB,portb);
             break;
     }
 }
@@ -98,11 +99,11 @@ void gpio14_clear_pin(uint8_t port,uint8_t pin)
     {
         case 'A':
             porta &= ~(1<<pin);
-            i2c_write_byte(GPIO14_PORTA,porta);
+            wiringPiI2CWriteReg8(fd,GPIO14_PORTA,porta);
             break;
         case 'B':
             portb &= ~(1<<pin);
-            i2c_write_byte(GPIO14_PORTB,portb);
+            wiringPiI2CWriteReg8(fd,GPIO14_PORTB,portb);
             break;
     }
 }
@@ -121,10 +122,10 @@ uint8_t gpio14_read_pin(uint8_t port,uint8_t pin)
     switch(port)
     {
         case 'A':
-            value=i2c_read_byte(GPIO14_PORTA);
+            value=wiringPiI2CReadReg8(fd,GPIO14_PORTA);
             break;
         case 'B':
-            value=i2c_read_byte(GPIO14_PORTB);
+            value=wiringPiI2CReadReg8(fd,GPIO14_PORTB);
             break;
     }
 
@@ -148,11 +149,11 @@ void gpio14_set_port(uint8_t port,uint8_t value)
     {
         case 'A':
             //clear the appropriate bit
-            i2c_write_byte(GPIO14_PORTA,value);
+            wiringPiI2CWriteReg8(fd,GPIO14_PORTA,value);
             break;
         case 'B':
             //clear the appropriate bit
-            i2c_write_byte(GPIO14_PORTB,value);
+            wiringPiI2CWriteReg8(fd,GPIO14_PORTB,value);
             break;
     }
 }
@@ -161,7 +162,7 @@ void gpio14_set_port(uint8_t port,uint8_t value)
 void gpio14_setup_a2d(uint8_t justify_mask,uint8_t config)
 {
     config = config + justify_mask;
-    i2c_write_byte(GPIO14_A2D_CONTROL,config);
+    wiringPiI2CWriteReg8(fd,GPIO14_A2D_CONTROL,config);
 }
 
 /*
@@ -195,18 +196,17 @@ unsigned int gpio14_read_a2d(uint8_t use_10_bits, uint8_t channel)
     most signifcant byte*/
     if(use_10_bits)
     {
-       value = i2c_read_byte(GPIO14_PORTA_MASK);
+       value = wiringPiI2CReadReg8(fd,GPIO14_PORTA_MASK);
        //shift the bits to make them the MSB
        value = value << 8;
 
        //porta mask register is also result high byte
-       value = value + i2c_read_byte(GPIO14_PORTB_MASK);
+       value = value + wiringPiI2CReadReg8(fd,GPIO14_PORTB_MASK);
     }
     else
     {
-        value = i2c_read_byte(GPIO14_PORTA_MASK);
-    }
-
+        value = wiringPiI2CReadReg8(fd,GPIO14_PORTA_MASK);
+    } 
     return value;
 }
 
@@ -216,11 +216,11 @@ changes the i2c address of a gpio14
 void gpio14_change_i2c_address(uint8_t new_i2c_address)
 {
     /* Start the I2C address changing procedure */
-    i2c_write_byte(GPIO14_CHANGE_ADDR,0xA0);
-    i2c_write_byte(GPIO14_CHANGE_ADDR,0xAA);
-    i2c_write_byte(GPIO14_CHANGE_ADDR,0xA5);
+    wiringPiI2CWriteReg8(fd,GPIO14_CHANGE_ADDR,0xA0);
+    wiringPiI2CWriteReg8(fd,GPIO14_CHANGE_ADDR,0xAA);
+    wiringPiI2CWriteReg8(fd,GPIO14_CHANGE_ADDR,0xA5);
 
-    i2c_write_byte(GPIO14_CHANGE_ADDR,new_i2c_address);
+    wiringPiI2CWriteReg8(fd,GPIO14_CHANGE_ADDR,new_i2c_address);
 
     /* Make the new i2c address the active one. */
     address=new_i2c_address;
@@ -241,5 +241,5 @@ void gpio14_select_unit(uint8_t gpio14_address)
 
 void gpio14_set_pwm(uint8_t width)
 {
-    i2c_write_byte(GPIO14_PWM,width);
+    wiringPiI2CWriteReg8(fd,GPIO14_PWM,width);
 }
