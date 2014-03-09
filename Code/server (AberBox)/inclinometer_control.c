@@ -10,10 +10,9 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <math.h>
-//#include "hp_sleep.h"
-#include "i2c.h"
+#include <wiringPiI2C.h>
+#include "wiringPi.h"
 #include "gpio14.h"
-//#include "read_sentence.h"
 #include "inclinometer_control.h"
 
 
@@ -52,6 +51,7 @@ attitude get_inclinometer()
 		chan0 += gpio14_read_a2d(1, 0);
 		chan1 += gpio14_read_a2d(1, 1);
 	  }
+	  
 	  chan0 /= (double) number_to_average;
 	  chan1 /= (double) number_to_average;
 

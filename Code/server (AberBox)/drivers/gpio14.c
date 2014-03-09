@@ -1,5 +1,5 @@
 /**
-RPi routines for the GPIO14
+Gumstix routines for the GPIO14
 */
 #include <stdio.h>
 #include <wiringPiI2C.h>

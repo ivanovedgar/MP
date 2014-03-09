@@ -9,11 +9,9 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <math.h>
-//#include "hp_sleep.h"
-#include "i2c.h"
-//#include "gps.h"
+#include <wiringPiI2C.h>
+#include "wiringPi.h"
 #include "gpio14.h"
-//#include "read_sentence.h"
 #include "relay_control.h"
 
 typedef struct relay_control {
@@ -31,7 +29,7 @@ static relay_control relays[NUM_RELAYS] = {
 	{'B',0},
 	{'B',2},
 	{'B',5},
-	{'B',6},
+	{'B',6}, 
 	{'B',7}
   };
 
@@ -55,7 +53,7 @@ void relay_init()
 	int i;
 
 	/* gpio14_init(); */
-	gpio14_select_unit(GPIO14_UNIT_1);
+	gpio14_select_unit(GPIO14_UNIT_0);
 	gpio14_setup_a2d(RIGHT_JUSTIFY_MASK, THREE_ANALOUGE);
 
 	for (i=0 ; i< NUM_RELAYS ; i++ ) {
