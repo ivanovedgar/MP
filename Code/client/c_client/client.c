@@ -8,7 +8,7 @@ void do_thing();
 void playWithRelays();
 void menu();
 int checkValidity(int,int,int);
-
+float incl[2] =  {0.0,0.0};
 int main()
 {
    int s;
@@ -34,7 +34,7 @@ int main()
 void menu(){
 	int choice, relay;
 	unsigned int status;
-	float incl[2] =  {0.0,0.0};
+	
 	printf("This is a menu for demo\n");
 	printf("1 Set all relays\n");
 	printf("2 Reset all relays\n");
