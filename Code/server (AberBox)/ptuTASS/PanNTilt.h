@@ -122,6 +122,11 @@ class PTinterface
 	void setProportionalPanSpeed(int p);
 	void setProportionalTiltSpeed(int p);
 
+	/*Stabilize */
+	void Stabilize();
+
+	/*Get drift rate (command "*mr?") */
+	void getDriftRate();
 
 private :
 	int devicePointer;

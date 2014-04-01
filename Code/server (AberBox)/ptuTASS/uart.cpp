@@ -25,7 +25,7 @@ int uart_init(unsigned int baud, const char *device)
 
     if (fd <0)
     {
-        fprintf(stderr,"Error opening device\n");
+        fprintf(stderr,"Error opening device, %d \n", fd);
         exit(1);
     }
 

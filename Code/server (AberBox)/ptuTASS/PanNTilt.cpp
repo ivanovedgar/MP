@@ -538,4 +538,37 @@ void PTinterface::setProportionalTiltSpeed(int p)
 	cout<<"\nSetting Tilt speed at proportional value "<<p<<" ..."<<endl;
 	int valid = send(devicePointer,cmd);
 }
-	
+
+/*Ed code*/
+
+void PTinterface::Stabilize(){
+
+	vector<unsigned char> cmd;
+	PushBeginning(cmd);
+	cmd.push_back(2);// payload size
+	cmd.push_back(72);//H
+	cmd.push_back(73);//I
+	cmd.push_back(CalcChecksum(cmd));//checksum
+	cmd.push_back(0);
+
+	send(devicePointer,cmd);
+}
+
+void PTinterface::getDriftRate(){
+
+	vector<unsigned char> cmd;
+	vector<unsigned char> rep;
+	PushBeginning(cmd);
+	cmd.push_back(4);//payload size
+	cmd.push_back(42);//*
+	cmd.push_back(109);//m
+	cmd.push_back(114);//r
+	cmd.push_back(63);//?
+	cmd.push_back(CalcChecksum(cmd));//checksum
+	cmd.push_back(0);
+
+	int valid = send(devicePointer,cmd,rep);
+
+	for(int i=0; i <rep.size(); i++)
+	cout<<(int)rep[i]<<"   ";
+}
