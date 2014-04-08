@@ -1,2 +1,0 @@
-enabling i2c on rpi http://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configuring-i2c
-https://projects.drogon.net/raspberry-pi/wiringpi/i2c-library/
