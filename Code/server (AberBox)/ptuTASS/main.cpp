@@ -26,45 +26,57 @@ while(1)
 		cout<< "9 - Tilt Up"<<endl;
 		cout<< "10 - Tilt Down"<<endl;
 		cout<< "11 - Get Limits"<<endl;
+		cout<< "12 - Set Inertial gain rate"<<endl;
+		cout<< "13 - Go to"<<endl;
 		cin >> choice;
 		switch(choice)
-			{
-				case 1:
-					p.Stabilize();
-					break;
-				case 2:
-					p.getDriftRate();
-					break;
-				case 3:
-					p.PanStop();
-					break;
-				case 4:
-					p.GotoHome();
-					break;
-				case 5:
-					p.PanLeft();
-					break;
-				case 6:
-					p.PanRight();
-					break;
-				case 7:
-					cout<< "Pan is: "<< p.getCurrentPosition().pan << endl;
-					cout<< "Tilt is: "<< p.getCurrentPosition().tilt << endl;
-					break;
-				case 8:
-					return 0;
-					break;
-				case 9:
-					p.TiltUp();
-					break;
-				case 10:
-					p.TiltDown();
-					break;
-				case 11:
-					p.getPanTiltLimits();
-					break;
-			}
+		{
+			case 1:
+				p.Stabilize();
+				break;
+			case 2:
+				p.getDriftRate();
+				break;
+			case 3:
+				p.PanStop();
+				break;
+			case 4:
+				p.GotoHome();
+				break;
+			case 5:
+				p.PanLeft();
+				break;
+			case 6:
+				p.PanRight();
+				break;
+			case 7:
+				cout<< "Pan is: "<< p.getCurrentPosition().pan << endl;
+				cout<< "Tilt is: "<< p.getCurrentPosition().tilt << endl;
+				break;
+			case 8:
+				return 0;
+				break;
+			case 9:
+				p.TiltUp();
+				break;
+			case 10:
+				p.TiltDown();
+				break;
+			case 11:
+				p.getPanTiltLimits();
+				break;
+			case 12:
+				p.setInertialRate(1.0, 0.1);
+				break;
+			case 13:
+				double p1,p2;
+				cout<< "Enter position"<<endl;
+				cin>>p1;
+				cin>>p2;
+				PTcoord GotoCoord(p1,p2);
+				p.Goto(GotoCoord);
+				break;
+		}
 	}
-
 return 0;
 }

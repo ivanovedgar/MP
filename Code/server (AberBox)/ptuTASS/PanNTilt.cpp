@@ -539,8 +539,6 @@ void PTinterface::setProportionalTiltSpeed(int p)
 	int valid = send(devicePointer,cmd);
 }
 
-/*Ed code*/
-
 void PTinterface::Stabilize(){
 
 	vector<unsigned char> cmd;
@@ -571,4 +569,31 @@ void PTinterface::getDriftRate(){
 
 	for(int i=0; i <rep.size(); i++)
 	cout<<(int)rep[i]<<"   ";
+}
+
+void pushD(double value, vector <unsigned char>& cmd){
+    char buffer [8];  //buffer to hold double value as chars, 8 places should be enought to store values from -99 to +99 and up to 5 digits after the decimal point, e.g. 20.05235
+    sprintf(buffer,"%f",value);
+    for(int i=0; i<8;i++){
+        cmd.push_back(buffer[i]);
+    }
+}
+
+void PTinterface::setInertialRate(double AzRate, double ElRate){
+	vector<unsigned char> cmd;
+	vector<unsigned char> result;
+	PushBeginning(cmd);
+	cmd.push_back(20);//payload; 8 bytes AzRate + 8 bytes ElRate + ,(comma) + *mr = 20
+	cmd.push_back(42);//*
+	cmd.push_back(109);//m
+	cmd.push_back(114);//r
+	
+	pushD(AzRate, cmd);
+	cmd.push_back(44);//,
+	pushD(ElRate, cmd);
+	
+	cmd.push_back(CalcChecksum(cmd));//checksum
+	cmd.push_back(0);
+
+	int valid = send(devicePointer,cmd,rep);
 }

@@ -22,10 +22,12 @@
 #include "uart.h"
 #include "PTfunctions.h"
 #include <string>
+#include <cstring>
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <math.h>
+#include <cstdio>
 using namespace std;
 
 /*This is an interface for the pan and tilt platform developed for the stabilization of the platform
@@ -127,9 +129,15 @@ class PTinterface
 
 	/*Get drift rate (command "*mr?") */
 	void getDriftRate();
+	
+	/*Move the gimbal at a specific inertial rate. Azimuth rate (Pan) and Elevation Rate (Tilt)*/
+	void setInertialRate(double AzRate, double ElRate);
 
 private :
 	int devicePointer;
+	
+	/*Push double in to the passed vector as ASCII numbers*/
+	void PushD(double value, vector<unsigned char>& cmd);
 
 	//used for the beginning of each command (always the same)		
 	void PushBeginning(vector<unsigned char> &cmd);
