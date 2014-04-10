@@ -1,7 +1,9 @@
 #include "PanNTilt.h"
 #include "PTfunctions.h"
 #include "uart.h"
+#include <math.h>
 
+#define PI 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679
 using namespace std;
 
 int main(){
@@ -28,6 +30,7 @@ while(1)
 		cout<< "11 - Get Limits"<<endl;
 		cout<< "12 - Set Inertial gain rate"<<endl;
 		cout<< "13 - Go to"<<endl;
+		cout<< "14 - Calculate drift"<<endl;
 		cin >> choice;
 		switch(choice)
 		{
@@ -66,15 +69,40 @@ while(1)
 				p.getPanTiltLimits();
 				break;
 			case 12:
-				p.setInertialRate(1.0, 0.1);
+				cout<< "Enter drift rate: ";
+				double panD, tiltD;
+				cin>>panD;
+				cin>>tiltD;
+				p.setInertialRate(panD,tiltD);
 				break;
 			case 13:
-				double p1,p2;
+				/*double p1,p2;
 				cout<< "Enter position"<<endl;
 				cin>>p1;
 				cin>>p2;
 				PTcoord GotoCoord(p1,p2);
-				p.Goto(GotoCoord);
+				p.Goto(GotoCoord);*/
+				break;
+			case 14:
+				p.GotoHome();
+				sleep(3);
+				double pan =  p.getCurrentPosition().pan;
+				double tilt = p.getCurrentPosition().tilt;
+				cout<< "Pan is: "<<  pan << endl;
+				cout<< "Tilt is: "<< tilt << endl;
+				p.Stabilize();
+				sleep(15);
+				double  pan2 = p.getCurrentPosition().pan;
+				double tilt2 = p.getCurrentPosition().tilt;
+				cout<< "Pan is: "<<  pan2 << endl;
+				cout<< "Tilt is: "<< tilt2 << endl;
+				double panDiff = (pan2-pan)/15*(-1)*PI/180;
+				double tiltDiff = (tilt2-tilt)/15*(-1)*PI/180;
+				cout<< "The difference is: "<< panDiff<<", "<<tiltDiff<<endl;
+				p.GotoHome();
+				sleep(3);
+				p.Stabilize();
+				p.setInertialRate(panDiff,tiltDiff);
 				break;
 		}
 	}

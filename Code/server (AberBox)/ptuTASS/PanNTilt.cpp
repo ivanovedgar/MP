@@ -56,7 +56,7 @@ void PTinterface::Goto(PTcoord _GotoCoord)
 void PTinterface::GotoHome()
 {
 	vector<unsigned char> cmd;
-	PushBeginning(cmd);
+	PusyhhBeginning(cmd);
 	cmd.push_back(2);//payload size
 	cmd.push_back(72);//H
 	cmd.push_back(79);//O	
@@ -595,5 +595,11 @@ void PTinterface::setInertialRate(double AzRate, double ElRate){
 	cmd.push_back(CalcChecksum(cmd));//checksum
 	cmd.push_back(0);
 
-	int valid = send(devicePointer,cmd,rep);
+	send(devicePointer,cmd);
+}
+
+double PTinterface::convertDegreesToRad(double degrees){
+
+
+
 }
