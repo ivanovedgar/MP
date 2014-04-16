@@ -28,6 +28,8 @@
 #include <unistd.h>
 #include <math.h>
 #include <cstdio>
+#include <time.h>
+#define PI 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679
 using namespace std;
 
 /*This is an interface for the pan and tilt platform developed for the stabilization of the platform
@@ -47,7 +49,7 @@ struct PTcoord
 	PTcoord(double _pan, double _tilt)
 	:pan(_pan),tilt(_tilt)
 	{
-	}	
+	}
 };
 
 class PTinterface
@@ -124,19 +126,22 @@ class PTinterface
 	void setProportionalPanSpeed(int p);
 	void setProportionalTiltSpeed(int p);
 
-	/*Stabilize */
+	//Stabilize
 	void Stabilize();
 
-	/*Get drift rate (command "*mr?") */
-	void getDriftRate();
 	
-	/*Move the gimbal at a specific inertial rate. Azimuth rate (Pan) and Elevation Rate (Tilt)*/
-	void setInertialRate(double AzRate, double ElRate);
-
+	
+	//Move the gimbal at a specific inertial rate. Azimuth rate (Pan) and Elevation Rate (Tilt)
+	void setInertialRate();
+	
+	void calibrate();
 private :
 	int devicePointer;
 	
-	/*Push double in to the passed vector as ASCII numbers*/
+	double getDriftRate(double,double,int);
+	void recalibrate();
+	void initialCalibration();
+	//Push double in to the passed vector as ASCII numbers
 	void PushD(double value, vector<unsigned char>& cmd);
 
 	//used for the beginning of each command (always the same)		

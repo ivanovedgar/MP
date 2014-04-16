@@ -19,6 +19,20 @@
  ***************************************************************************/
 #include "PanNTilt.h"
 
+struct DriftRate
+{
+	double panDriftRate;
+	double tiltDriftRate;
+	int lastCalibrationTime; //in seconds since 1970
+	
+	DriftRate(double _panDriftRate, double _tiltDriftRate, double _lastCalibrationTime)
+	:panDriftRate(_panDriftRate),tiltDriftRate(_tiltDriftRate),lastCalibrationTime(_lastCalibrationTime)
+	{
+	}
+}PTUDriftRate(0.0,0.0,-1.0);
+ 
+PTcoord lastPositionBeforeStabilization(0.0,0.0);
+ 
 PTinterface::PTinterface(unsigned int baud, const char *device)
 {	
 	devicePointer = uart_init(9600, device);
@@ -56,7 +70,7 @@ void PTinterface::Goto(PTcoord _GotoCoord)
 void PTinterface::GotoHome()
 {
 	vector<unsigned char> cmd;
-	PusyhhBeginning(cmd);
+	PushBeginning(cmd);
 	cmd.push_back(2);//payload size
 	cmd.push_back(72);//H
 	cmd.push_back(79);//O	
@@ -143,7 +157,6 @@ void PTinterface::setPreset(int numPreset)
 
 	int valid = send(devicePointer,cmd);	
 }
-
 
 /* acceleration in degree*second-² */
 void PTinterface::setAccelerationPan(double _acc)
@@ -540,7 +553,9 @@ void PTinterface::setProportionalTiltSpeed(int p)
 }
 
 void PTinterface::Stabilize(){
-
+	lastPositionBeforeStabilization.pan = getCurrentPosition().pan;;
+	lastPositionBeforeStabilization.tilt = getCurrentPosition().tilt;
+	
 	vector<unsigned char> cmd;
 	PushBeginning(cmd);
 	cmd.push_back(2);// payload size
@@ -552,54 +567,88 @@ void PTinterface::Stabilize(){
 	send(devicePointer,cmd);
 }
 
-void PTinterface::getDriftRate(){
-
-	vector<unsigned char> cmd;
-	vector<unsigned char> rep;
-	PushBeginning(cmd);
-	cmd.push_back(4);//payload size
-	cmd.push_back(42);//*
-	cmd.push_back(109);//m
-	cmd.push_back(114);//r
-	cmd.push_back(63);//?
-	cmd.push_back(CalcChecksum(cmd));//checksum
-	cmd.push_back(0);
-
-	int valid = send(devicePointer,cmd,rep);
-
-	for(int i=0; i <rep.size(); i++)
-	cout<<(int)rep[i]<<"   ";
-}
-
-void pushD(double value, vector <unsigned char>& cmd){
-    char buffer [8];  //buffer to hold double value as chars, 8 places should be enought to store values from -99 to +99 and up to 5 digits after the decimal point, e.g. 20.05235
-    sprintf(buffer,"%f",value);
-    for(int i=0; i<8;i++){
+void PTinterface::PushD(double value, vector <unsigned char>& cmd){
+    char buffer [15];  //buffer to hold double value as chars, 8 places should be enought to store values from -99 to +99 and up to 5 digits after the decimal point, e.g. 20.05235
+    sprintf(buffer,"%.15f",value);
+    for(int i=0; i<15;i++){
         cmd.push_back(buffer[i]);
     }
 }
 
-void PTinterface::setInertialRate(double AzRate, double ElRate){
+void PTinterface::setInertialRate(){
 	vector<unsigned char> cmd;
 	vector<unsigned char> result;
 	PushBeginning(cmd);
-	cmd.push_back(20);//payload; 8 bytes AzRate + 8 bytes ElRate + ,(comma) + *mr = 20
+	cmd.push_back(34);//payload; 8 bytes AzRate + 8 bytes ElRate + ,(comma) + *mr = 20
 	cmd.push_back(42);//*
 	cmd.push_back(109);//m
 	cmd.push_back(114);//r
 	
-	pushD(AzRate, cmd);
+	PushD(PTUDriftRate.panDriftRate, cmd);
 	cmd.push_back(44);//,
-	pushD(ElRate, cmd);
+	PushD(PTUDriftRate.tiltDriftRate, cmd);
+	
 	
 	cmd.push_back(CalcChecksum(cmd));//checksum
 	cmd.push_back(0);
 
 	send(devicePointer,cmd);
 }
+/*calibrate function determines current drift rate and stores it for future use. If program just started and data about dift is
+not available it preforms initial calibration which takes around 15 seconds*/
 
-double PTinterface::convertDegreesToRad(double degrees){
+void PTinterface::calibrate(){
+	if(PTUDriftRate.lastCalibrationTime == -1){
+		cout<<"Initial calibration to be perfomed"<<endl;
+		initialCalibration();
+	}else{
+		cout<<"ReCalibration to be performed"<<endl;
+		recalibrate();
+	}
+	cout<<"Current drift rate is: "<< PTUDriftRate.panDriftRate<<", "<<PTUDriftRate.tiltDriftRate;
+}
 
+void PTinterface::initialCalibration(){
+	int calibrationTime = 15;
+	GotoHome();
+	sleep(3);  //time for PTU to go to the home position. 
+	double panAtTheBeginning =  getCurrentPosition().pan;
+	double tiltAtTheBeginning = getCurrentPosition().tilt;
 
+	Stabilize();
+	sleep(calibrationTime);
+	Halt();
 
+	double  panAtTheEnd = getCurrentPosition().pan;
+	double tiltAtTheEnd  = getCurrentPosition().tilt;
+	GotoHome();
+	
+	PTUDriftRate.panDriftRate = getDriftRate(panAtTheBeginning,panAtTheEnd,calibrationTime);
+	PTUDriftRate.tiltDriftRate = getDriftRate(tiltAtTheBeginning,tiltAtTheEnd,calibrationTime);
+	PTUDriftRate.lastCalibrationTime = time(0);
+	cout<<panAtTheBeginning<<", "<<tiltAtTheBeginning<<endl;
+	cout<<panAtTheEnd<<", "<<tiltAtTheEnd<<endl;
+	cout<<PTUDriftRate.panDriftRate<<", "<<PTUDriftRate.tiltDriftRate<<endl;
+}
+
+void PTinterface::recalibrate(){
+	double lastPan = lastPositionBeforeStabilization.pan;
+	double lastTilt = lastPositionBeforeStabilization.tilt;
+	double currentPan =  getCurrentPosition().pan;
+	double currentTilt = getCurrentPosition().tilt;
+	
+	int currentTime = time(0);
+	int lastCalibrationTime = PTUDriftRate.lastCalibrationTime;
+	int timeDifference = difftime(currentTime,lastCalibrationTime);
+
+	PTUDriftRate.panDriftRate += getDriftRate(lastPan,currentPan,timeDifference);
+	PTUDriftRate.panDriftRate += getDriftRate(lastTilt,currentTilt,timeDifference);
+}
+
+//returns drift rate in radians per second.
+double PTinterface::getDriftRate(double beginningPosition, double endPosition, int time){
+	double result = (endPosition-beginningPosition)/time; //drift rate in degrees per second
+	result = result*PI/180; //drift rate converted in to the radians per second
+	result = result *(-1); //change drift rate sign to the opposite one
+	return result;
 }
