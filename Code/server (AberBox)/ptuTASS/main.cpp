@@ -8,7 +8,6 @@ using namespace std;
 
 int main(){
 int choice;
-cout<< "Hello world, starting app" << endl;
 //PTinterface p(9600, "/dev/ttyAMA0");
 PTinterface p(9600, "/dev/ttyUSB0");
 p.VerifyHome();
@@ -16,7 +15,7 @@ p.GotoHome();
 
 while(1)
 	{
-		cout<< "Choose command" << endl;
+		cout<< endl<< "Choose command" << endl;
 		cout<< "1 - Stabilize" << endl;
 		cout<< "3 - Stop"<<endl;
 		cout<< "4 - Go Home"<<endl;
@@ -26,15 +25,15 @@ while(1)
 		cout<< "8 - Exit"<<endl;
 		cout<< "9 - Tilt Up"<<endl;
 		cout<< "10 - Tilt Down"<<endl;
-		cout<< "11 - Get Limits"<<endl;
-		cout<< "12 - Set Inertial gain rate"<<endl;
-		cout<< "13 - Go to"<<endl;
-		cout<< "14 - Calibrate"<<endl;
+		cout<< "13 - Initial Calibration"<<endl;
+		cout<< "14 - ReCalibrate"<<endl;
+		cout<< "15 - Get pan tilt limits"<<endl;
 		cin >> choice;
 		switch(choice)
 		{
 			case 1:
 				p.Stabilize();
+				p.setDriftRate();
 				break;
 			case 3:
 				p.PanStop();
@@ -64,19 +63,20 @@ while(1)
 			case 11:
 				p.getPanTiltLimits();
 				break;
-			case 12:
-				p.setInertialRate();
-				break;
 			case 13:
-				/*double p1,p2;
-				cout<< "Enter position"<<endl;
-				cin>>p1;
-				cin>>p2;
-				PTcoord GotoCoord(p1,p2);
-				p.Goto(GotoCoord);*/
+				int time;
+				cout<<"Enter calibration time in seconds:"<<endl;
+				cin >> time;
+				bool re;
+				re = p.initialCalibration(time);
+				cout<<endl<<"The result is: "<<re<<endl;
 				break;
 			case 14:
-				p.calibrate();
+				p.recalibrate();
+				p.setDriftRate();
+				break;
+			case 15:
+				p.getPanTiltLimits();
 				break;
 		}
 	}

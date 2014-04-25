@@ -34,8 +34,7 @@ using namespace std;
 
 /*This is an interface for the pan and tilt platform developed for the stabilization of the platform
  through attitude computing with a panoramic camera.
-  This can also be used for every application that need to control the platform. Only some of the main
- functions are implemented. For the list of everything the platform can do, please refer to the Servo 
+  This can also be used for every application that need to control the platform. For the list of everything the platform can do, please refer to the Servo 
 command set documentation.
   
 */
@@ -59,89 +58,122 @@ class PTinterface
 	~PTinterface();
 	vector<unsigned char> response;
 
-	/*Goto pan and tilt coordinates, the values in the _GotoCoord are in degrees and
+	/**Goto pan and tilt coordinates, the values in the _GotoCoord are in degrees and
 	the function make the conversion in the command set format*/
 	void Goto( PTcoord _GotoCoord );
 
-	/*GotoHome*/
+	/**GotoHome*/
 	void GotoHome();
 
-	/*Verify Home, calibration of the home position, first thing to do*/
+	/**Verify Home, calibration of the home position, first thing to do*/
 	void VerifyHome();
 
-	/*set Acceleration on the Pan axis, _acc is in deg/sec²*/
+	/**set Acceleration on the Pan axis, _acc is in deg/sec²*/
 	void setAccelerationPan( double _acc );
 
-	/*set Acceleration on the tilt axis, _acc is in deg/sec²*/
+	/**set Acceleration on the tilt axis, _acc is in deg/sec²*/
 	void setAccelerationTilt( double _acc );
 
-	/*set Speed on the Pan axis, _rateSpeed is in deg/sec*/
+	/**set Speed on the Pan axis, _rateSpeed is in deg/sec*/
 	void setDiscreteRateSpeedPan( double _rateSpeed );
 
-	/*set Speed on the tilt axis, rateSpeed is in deg/sec*/
+	/**set Speed on the tilt axis, rateSpeed is in deg/sec*/
 	void setDiscreteRateSpeedTilt( double _rateSpeed );
 
-	/*Pan to the left until it reachs the pan limit*/
+	/**Pan to the left until it reaches the pan limit*/
 	void PanLeft();
 
-	/*Pan to the right until it reachs the pan limit*/
+	/**Pan to the right until it reaches the pan limit*/
 	void PanRight();
 
-	/*Tilt to the back until it reachs the tilt limit*/
+	/**Tilt to the back until it reaches the tilt limit*/
 	void TiltDown();
 
-	/*Tilt to the front until it reachs the tilt limit*/
+	/**Tilt to the front until it reaches the tilt limit*/
 	void TiltUp();
 
-	/*Stop all movements on the Pan axis*/
+	/**Stop all movements on the Pan axis*/
 	void PanStop();
 
-	/*Stop all movements on th tilt axis*/
+	/**Stop all movements on the tilt axis*/
 	void TiltStop();
 
-	//turn off motors, store current position
+	/**turn off motors, store current position*/
 	void Halt();	
 	
-	//get position stored at preset numPreset (0 to 255)
+	/**get position stored at preset numPreset (0 to 255)*/
 	void getPreset(int numPreset);
-	//store current position at preset numPreset (0 to 255)
+	/**store current position at preset numPreset (0 to 255)*/
 	void setPreset(int numPreset);
 	
-	//enable or disable the vector motion mod, move to a position such that both axes arrive at the designated position at the same time
+	/**enable or disable the vector motion mod, move to a position such that both axes arrive at the designated position at the same time*/
 	void setVectorMotion(bool v);
 
-	//Set the position limits on the pan and tilt axis,  position are sent as degrees
+	/**Set the position limits on the pan and tilt axis,  position are sent as degrees*/
 	void setPanTiltLimits(int PanCCW, int PanCW, int TiltCCW, int TiltCW);
 
-	//Get the position limits on the pan and til axis
+	/**Get the position limits on the pan and tilt axis*/
 	void getPanTiltLimits();
 
-	//Get the current position of the pan and tilt platform
+	/**Get the current position of the pan and tilt platform*/
 	PTcoord getCurrentPosition();
 
-	//Clear the limits and set the default values
+	/**Clear the limits and set the default values*/
 	void clearSoftwareLimits();
 
-	//set a proportional speed, p between 0 and 15, 0 = slow , 15 = max,  
+	/**Set a proportional pan speed. 
+	\param[in] p between 0 and 15, 0 = slow , 15 = max
+	*/
 	void setProportionalPanSpeed(int p);
+	
+	/**Set a proportional tilt speed.
+	\param[in] p between 0 and 15, 0 = slow , 15 = max
+	*/
 	void setProportionalTiltSpeed(int p);
 
-	//Stabilize
+	/**
+	\brief Tell PTU to stabilize at whatever position it is right now.
+	 */
 	void Stabilize();
 
+	/**
+	\brief Move the gimbals at a specific inertial rate. Azimuth rate (Pan) and Elevation rate (Tilt). Values are in radians/sec.
+	 */
+	void setDriftRate();
 	
+	/**
+	\brief Performs initial calibration.
+	\param[in] calibrationTime Time period in seconds over which calibration will be performed, if false is returned try shorter period of time,
+	anything greater that 55 seconds is likely to fail.
+	\return	True if calibration was successfully, false if not.
+	 */
+	bool initialCalibration(int calibrationTime);
 	
-	//Move the gimbal at a specific inertial rate. Azimuth rate (Pan) and Elevation Rate (Tilt)
-	void setInertialRate();
+	/**
+	\brief Performs recalibration. Calculates by how much PTU drifted since the last Stabilize command 
+	and adjusts according values in PTUDriftRate structure. If recalibration fails initial calibration must be preformed first.
+	\return True if calibration was successfully, false if not.
+	 */
+	bool recalibrate();
 	
-	void calibrate();
 private :
 	int devicePointer;
 	
-	double getDriftRate(double,double,int);
-	void recalibrate();
-	void initialCalibration();
-	//Push double in to the passed vector as ASCII numbers
+	/**
+	\brief Generic function that calculates drift rate for the supplied values. It is used to calculate PTU drift for Azimuth and Elevation.
+	\param[in] beginningPosition Pan or Tilt position at the beginning. 
+	\param[in] endPosition Pan or Tilt position at the end.
+	\param[in] time Amount of time in seconds that elapsed while PTU was drifting.
+	\param[out] result Returned result is a drift rate in radians/sec.
+	 */
+	double getDriftRate(double beginningPosition, double endPosition, int time);
+	
+	/**
+	\brief This function translates supplied value in to the ASCII characters and adds them to the supplied vector, so 
+	that double number 10.02 would be represented as a series of numbers 49 48 46 48 50.
+	\param[in] value Double number to be translate in to the ASCII. 
+	\param[out] cmd Value encoded as ASCII is added to this vector.
+	 */
 	void PushD(double value, vector<unsigned char>& cmd);
 
 	//used for the beginning of each command (always the same)		
