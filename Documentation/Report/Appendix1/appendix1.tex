@@ -1,13 +1,11 @@
-\chapter{Third-Party Code and Libraries}
+\chapter{Libraries and RPi configuration}
+This Appendix contains essential information on the RPi configuration. This configuration is required for the proper server side software functionality.
 
-If you have made use of any third party code or software libraries, i.e. any code that you have not designed and written yourself, then you must include this appendix. 
+\section{Raspbian OS configuration}
+The installation procedure of the Raspbian OS is covered on this website: http://www.raspbian.org/
 
-As has been said in lectures, it is acceptable and likely that you will make use of third-party code and software libraries. The key requirement is that we understand what is your original work and what work is based on that of other people. 
+\section{Preventing Linux using the serial port}
+Disabling the serial console is required to use the Raspberry Pi's serial port (UART) to talk to other devices. There is a script which allows to automate the whole process and is covered in detail on this page: https://github.com/lurch/rpi-serial-console .
 
-Therefore, you need to clearly state what you have used and where the original material can be found. Also, if you have made any changes to the original versions, you must explain what you have changed. 
-
-As an example, you might include a definition such as: 
-
-Apache POI library – The project has been used to read and write Microsoft Excel files (XLS) as part of the interaction with the client’s existing system for processing data. Version 3.10-FINAL was used. The library is open source and it is available from the Apache Software Foundation 
-\cite{apache_poi}. The library is released using the Apache License 
-\cite{apache_license}. This library was used without modification. 
+\section{WiringPi library}
+The WiringPi project has been used to read and write data on I$^2$C bus as part of the interaction with the gpio14 chip. The library is open source and it is available from the Gordons Projects website: http://wiringpi.com/ . Installation is covered on this web page: http://wiringpi.com/download-and-install/ . Before the I$^2$C interface can be used I$^2$C drivers need to be load into the kernel, guide is available at the http://wiringpi.com/reference/i2c-library/ .  

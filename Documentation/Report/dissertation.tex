@@ -60,10 +60,10 @@
 
 \tableofcontents   
 \newpage
-\listoffigures
-\newpage 
-\listoftables
-\newpage
+%\listoffigures
+%\newpage 
+%\listoftables
+%\newpage
 
 % Set up page numbering
 \pagenumbering{arabic}
@@ -119,12 +119,9 @@
 % the following line is included so that the bibliography is also shown in the table of contents. There is the possibility that this is added to the previous page for the bibliography. To address this, a newline is added so that it appears on the first page for the bibliography. 
 \addcontentsline{toc}{chapter}{Annotated Bibliography} % Adds References to contents page
 
-%
 % example of including an annotated bibliography. The current style is an author date one. If you want to change, comment out the line and uncomment the subsequent line. You should also modify the packages included at the top (see the notes earlier in the file) and then trash your aux files and re-run. 
 %\bibliographystyle{authordate2annot}
 \bibliographystyle{IEEEannot}
 \renewcommand{\bibname}{Annotated Bibliography} 
-\bibliography{References/references} % References file
-
-
+\bibliography{References/MP} % References file
 \end{document}

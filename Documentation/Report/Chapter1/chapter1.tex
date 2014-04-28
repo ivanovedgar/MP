@@ -1,29 +1,31 @@
 \chapter{Introduction}
-This section should discuss your preparation for the project, including background reading, your analysis of the problem and the process or method you have followed to help structure your work.  It is likely that you will reuse part of your outline project specification, but at this point in the project you should have more to talk about. 
+Pan-and-Tilt Unit (PTU) is a stabilised 2-axes platform mounted on the Idris electric vehicle that holds a panoramic camera. This vehicle is used for the research and drives over the curved surfaces \cite{ProjectIdris}. PTU has a built in functionality to stabilize at the chosen position, so that if rover drives up the hill camera stays vertical. Theoretically to achieve camera verticality stabilization command could be invoked only once, when the rover is standing on the flat surface, or its position could be adjusted manually if it is on a curved surface and then stabilization command issued. 
 
-I was interested in getting experience with assembling and programming real world sensors and mini computers where low level programming would be involved. This project attracted my attention because is was solving real world problem, having a real customer and contained both hardware and software parts.
+\section{Problem Analysis}
+To ensure stability of the camera PTU uses gyroscopes, which in a perfect world would be enough. Unfortunately the well known problem of the gyroscopes is that their readings are affected by the different air temperature, magnetic effects, friction etc.\cite{HandbookOfModernSensors}. In reality when PTU is issued with the stabilization command platform slowly drifts on both axes and in ~1-2 minutes goes to the position which is 20 degrees different from where it should be. This project will concentrate on fixing this particular issue and try to enhance current system functionality.
 
-\section{Problem Definition}
-Pan-and-Tilt Unit (PTU), which is mounted on the Idris electric vehicle, is used to hold a panoramic camera. This vehicle is used for the research and mainly drives over the curved surfaces. PTU that holds a camera has a built in functionality to stabilize at the chosen position, so that if rover drives up the hill camera stays vertical. Theoretically to achieve camera verticality rover could be standing on the flat surface when stabilization command is issued, or its position could be adjusted manually if it is on a curved surface and then stabilization command issued. To ensure stability of the camera PTU uses gyroscopes, which in a perfect world would be enough. Unfortunately the well known problem of the gyroscopes is that their readings are affected by the different air temperature, magnetic effects, friction etc.\cite{JacobFraden2010}. In reality when PTU is issued with the stabilization command it slowly drifts on both axes and in 1-2 minutes goes to the position which is 20 degrees different from where is should be. 
+\section{Proposed Solution}
+One of the possible solutions could be the use of the additional PTU functionality. It allows to cancel drift by specifying, calculated in advance, drift rate in radians per second. The problem with this solution is that the drift rate can change if the surround environment changes (sun goes behind the clouds and air temperature drops affecting gyroscope readings) and manually calculating new drift rate every 10 minutes becomes infeasible and tedious. 
 
-One of the possible solutions could be the use of the additional PTU functionality which allows to cancel drift by specifying drift rate in radians per second calculated in advance. The problem with this solution is that drift rate can change dramatically if surround environment changes (sun goes behind the clouds and air temperature drops affecting gyroscope readings) and manually calculating new drift rate every 10 minutes becomes infeasible and tedious. 
+Proposed solution is to automate drift rate calculation so that it can be adjusted while driving. However this approach requires additional information about the current PTU orientation in the space (its inclination angles with respect to gravity). For this purpose can be used electronic inclinometer. Inclinometer response is electric signal representing an angle between the internal axis and the gravity vector \cite{HandbookOfModernSensors}. Accurate reading with such device can be obtained only if it is in a stable position and does not accelerate, otherwise it will provide erroneous data representing sum of two vectors – earth gravity and acceleration. This imposes certain limitations as to of when PTU drift rate calibration can be performed, meaning that the vehicle will have to stop every time for this task to take place.
 
-Proposed solution is to automate drift rate calculation so that it can be adjusted while driving. However this approach requires additional information about the current PTU orientation in the space (its inclination angles with respect to gravity). For this purpose can be used electronic inclinometer. It is a special type of the accelerometer, inclinometer response is electric signal representative of an angle between the internal axis and the gravity vector \cite{JacobFraden2010}. Accurate reading with such device can be obtained only if it is in a stable position and does not accelerate, otherwise it will provide erroneous data representing sum of two vectors – earth gravity and acceleration. This imposes certain limitations as to of when PTU drift rate calibration can be preformed, meaning that the vehicle will have to stop every time to perform recalibration.  
+\section{Control System}
+My work will be based on the system that is currently used to control PTU and taker readings from the inclinometer. Current system consists from the Gumstix minicomputer, gpio14 chip, relays, inclinometer, PTU, server side code (running on Gumstix), client side code (provides API for the interaction with the main system) and the library implementing PTU TASS communication protocol to interact with the PTU.
 
-The aim of the project is to build an additional unit. Essential my task is to write a program which will interact with the PTU and inclinometer. The program will fetch data from both devices and compare it. Based on the difference between PTU and inclinometer information it will calculate by how much degrees PTU should be adjusted and then will send this calibration data to the PTU. At the end of the project there should be a simple interface that allows to perform calibration by just sending one command from the unit that controls the rover.
+There was a decision made by the client to replace currently used platform (Gumstix). The rationale behind that were client concerns about the currently used Gumstix computer which is becoming old and in case of a breakdown it would be difficult to find a replacement parts. Another requirement was the ability to compile accompanying code on the platform itself (this is currently impossible on the Gumstix due to the hardware limitations), instead of cross-compiling code on the PC and then uploading executables to the Gumstix. After a short discussion Raspberry Pi minicomputer was chosen as a replacement platform, it has enough power to compile code as well as all required interfaces to connect with the other equipment. PTU TASS library will be reused and its functionality extended to implement new features. Server side and client side code will be adjusted to provide access to the new functionality.
 
-\section{Background}
-What was your background preparation for the project? What similar systems did you assess? What was your motivation and interest in this project? 
+\section{Aims}
+The aim of this project is to modify current system and extend its functionality to support automatic drift rate calculation and following calibration  The outcome of the project should be a system that provides simple way to control PTU including stabilization functionality.
 
-   
+Main tasks
+\begin{itemize}
+\item Port current system from the Gumstix on to the Raspberry Pi.
+\subitem This includes recompiling code on the new system and tweaking it to work with the I$^2$C bus.
+\item Extend functionality of the PTU TASS library.
+\subitem Incorporate new commands for the stabilization and drift rate.
+\item Implement PTU drift rate calculation functionality.
+\end{itemize}  
 
-\section{Analysis}
-Taking into account the problem and what you learned from the background work, what was your analysis of the problem? How did your analysis help to decompose the problem into the main tasks that you would undertake? Were there alternative approaches? Why did you choose one approach compared to the alternatives? 
 
-There should be a clear statement of the objectives of the work, which you will evaluate at the end of the work. 
 
-In most cases, the agreed objectives or requirements will be the result of a compromise between what would ideally have been produced and what was felt to be possible in the time available. A discussion of the process of arriving at the final list is usually appropriate.
-
-\section{Process}
-You need to describe briefly the life cycle model or research method that you used. You do not need to write about all of the different process models that you are aware of. Focus on the process model that you have used. It is possible that you needed to adapt an existing process model to suit your project; clearly identify what you used and how you adapted it for your needs.
 
