@@ -28,7 +28,8 @@ while(1)
 		cout<< "13 - Initial Calibration"<<endl;
 		cout<< "14 - ReCalibrate"<<endl;
 		cout<< "15 - Get pan tilt limits"<<endl;
-		cout<< "16 - Go to vertical position"<<endl;
+		cout<< "16 - Go to vertical position and stabilize"<<endl;
+		cout<< "17 - Recalibrate with inclinometer values"<<endl;
 		cin >> choice;
 		switch(choice)
 		{
@@ -86,6 +87,21 @@ while(1)
 				cout<<"Enter fore aft value :"<<endl;
 				cin >> fr_rear;
 				p.goToVerticalPosition(side,fr_rear);
+				sleep(3);
+				p.Stabilize();
+				p.setDriftRate();
+				break;
+			case 17:
+				double s, f;
+				cout<<"Enter side-side value :"<<endl;
+				cin >> s;
+				cout<<"Enter fore aft value :"<<endl;
+				cin >> f;
+				p.reCalibrateWithInclinometer(s,f);
+				p.goToVerticalPosition(s,f);
+				sleep(3);
+				p.Stabilize();
+				p.setDriftRate();
 				break;
 		}
 	}

@@ -7,3 +7,11 @@ MMP_OutlineProjectSpecification.log
 MMP_OutlineProjectSpecification.pdf
 MMP_OutlineProjectSpecification.synctex.gz
 /Documentation/OPS/MMP_OutlineProjectSpecification.tex
+*.aux
+*.bbl
+dissertation.blg
+*.lof
+*.log
+*.lot
+dissertation.synctex.gz
+*.toc
