@@ -397,7 +397,7 @@ void PTinterface::setPanTiltLimits(int PanCCW, int PanCW, int TiltCCW, int TiltC
 	cmd.push_back(CalcChecksum(cmd));
 	cmd.push_back(0);
 
-	cout<<"\nsettings Limit.."<<endl;
+	cout<<"\nsetting Limit.."<<endl;
 	int valid = send(devicePointer,cmd);
 	for(int i=0; i <cmd.size(); i++)
 		cout<<(int)cmd[i]<<"   ";
@@ -479,7 +479,6 @@ PTcoord PTinterface::getCurrentPosition()
 
 	//the angle are written as hundredth of a degree
 	pos.pan = (float) t / 100.0;
-	
 	t = 0;
 
 	//Tilt position is in byte 10 to 13 of the response
@@ -497,7 +496,6 @@ PTcoord PTinterface::getCurrentPosition()
 
 	//the angle are written as hundredth of a degree
 	pos.tilt = (float)t / 100.0;
-
 	return pos;
 }
 
@@ -590,7 +588,6 @@ void PTinterface::setDriftRate(){
 	cmd.push_back(44);//,
 	PushD(PTUDriftRate.tiltDriftRate, cmd);
 	
-	
 	cmd.push_back(CalcChecksum(cmd));//checksum
 	cmd.push_back(0);
 
@@ -611,7 +608,6 @@ bool PTinterface::initialCalibration(int calibrationTime){
 
 	double  panAtTheEnd = getCurrentPosition().pan;
 	double tiltAtTheEnd  = getCurrentPosition().tilt;
-	cout<<panAtTheEnd<<" "<<tiltAtTheEnd<<endl;
 	
 	//Below is a check to make sure that PTU didn't hit its rotation limits on Pan and Tilt axis while calibrating. 
 	if(((panAtTheEnd > -39.00)&&(panAtTheEnd <39.00))&&((tiltAtTheEnd > -19.00)||(tiltAtTheEnd < 19.00))){
@@ -623,25 +619,53 @@ bool PTinterface::initialCalibration(int calibrationTime){
 	return result;
 }
 
-bool PTinterface::recalibrate(){
+bool PTinterface::reCalibrate(){
 	bool result = false;
-	double currentPan =  getCurrentPosition().pan;
-	double currentTilt = getCurrentPosition().tilt;
+	PTcoord currentPosition = getCurrentPosition();
+	
+	double currentPan = currentPosition.pan;
+	double currentTilt = currentPosition.tilt;
+	int currentTime = time(0);
 	
 	//Below is a check to make sure that PTU didn't hit its rotation limits on Pan and Tilt axis. 
 	if(((currentPan > -39.00)&&(currentPan <39.00))&&((currentTilt > -19.00)||(currentTilt < 19.00))){
-		int currentTime = time(0);		
 		int timeDifference = difftime(currentTime,PTUDriftRate.StabilizationTime);
-
+		
 		PTUDriftRate.panDriftRate += getDriftRate(PositionBeforeStabilization.pan,currentPan,timeDifference);
-		PTUDriftRate.panDriftRate += getDriftRate(PositionBeforeStabilization.tilt,currentTilt,timeDifference);
+		PTUDriftRate.tiltDriftRate += getDriftRate(PositionBeforeStabilization.tilt,currentTilt,timeDifference);
 		
 		PositionBeforeStabilization.pan = currentPan;
 		PositionBeforeStabilization.tilt = currentTilt;
 		PTUDriftRate.StabilizationTime = currentTime;
+		
 		result = true;
 	}
 	return result;
+}
+
+bool PTinterface::reCalibrateWithInclinometer(double side_side, double fore_aft){
+	bool result = false;
+	double currentPan =  getCurrentPosition().pan;
+	double currentTilt = getCurrentPosition().tilt;
+	
+	int currentTime = time(0);		
+	int timeDifference = difftime(currentTime,PTUDriftRate.StabilizationTime);
+	
+	if(((currentPan > -39.00)&&(currentPan <39.00))&&((currentTilt > -19.00)||(currentTilt < 19.00))){
+		int currentTime = time(0);		
+		int timeDifference = difftime(currentTime,PTUDriftRate.StabilizationTime);
+
+		PTUDriftRate.panDriftRate += getDriftRate(side_side,currentPan,timeDifference);
+		PTUDriftRate.tiltDriftRate += getDriftRate(fore_aft,currentTilt,timeDifference);
+		
+		PTUDriftRate.StabilizationTime = currentTime;
+		result = true;
+	}
+	return result;
+}
+void PTinterface::goToVerticalPosition(double side_side, double fore_aft){
+	PTcoord goTo(side_side,fore_aft);
+	Goto(goTo);
 }
 
 double PTinterface::getDriftRate(double beginningPosition, double endPosition, int time){

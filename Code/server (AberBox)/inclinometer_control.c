@@ -23,7 +23,7 @@
 #define HALF_RANGE_CHAN_1 (408.0)
 #define CENTRE_CHAN_1 (516.0)
 
- #define DEBUG
+#define DEBUG
 
 typedef struct {
 	double half_range;
@@ -98,17 +98,28 @@ attitude get_inclinometer()
 void inclinometer_init() {
 
 	FILE *openfile = NULL;
-	char line[200], func[20];
+	char line[200], func[30];
 	double value;
 	
 #ifdef DEBUG
 	printf("Loading configuration\n");
 #endif
 	
+/*
 	openfile = fopen("configuration.txt","r");
-		
-	if (openfile != NULL){	
-		while (fgets(line, 99, openfile) != NULL){
+	int achar;
+	achar = fgetc(openfile);
+	while (achar != EOF)
+	{
+		printf("%c", achar);
+		achar = fgetc(openfile);
+	}
+	fclose(openfile);
+*/
+	
+	openfile = fopen("configuration.txt","r");
+	if (openfile != NULL){
+		while (fgets(line, 199, openfile) != NULL){
 			sscanf(line,"%s %lf", func, &value);
 			if (strcmp(func,"side_side_midpoint") == 0){
 				/* set side to side midpoint */

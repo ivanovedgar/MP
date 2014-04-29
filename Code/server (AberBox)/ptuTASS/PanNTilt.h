@@ -150,11 +150,25 @@ class PTinterface
 	bool initialCalibration(int calibrationTime);
 	
 	/**
-	\brief Performs recalibration. Calculates by how much PTU drifted since the last Stabilize command 
-	and adjusts according values in PTUDriftRate structure. If recalibration fails initial calibration must be preformed first.
+	\brief Performs drift rate recalibration. Calculates by how much PTU drifted since the last Stabilize command 
+	and adjusts according values in the PTUDriftRate structure. If recalibration fails initial calibration must be preformed first.
 	\return True if calibration was successfully, false if not.
 	 */
-	bool recalibrate();
+	bool reCalibrate();
+	
+	/**
+	\brief Performs drift rate recalibration based on the values from the inclinometer and adjusts according values in the PTUDriftRate 
+	structure. If recalibration fails initial calibration must be preformed first.
+	\return True if calibration was successfully, false if not.
+	 */
+	bool reCalibrateWithInclinometer(double side_side, double fore_aft);
+	
+	/**
+	\brief Commands PTU to move platform to the vertical position.
+	\param[in] side-side Platform side elevation.
+	\param[in] fore-aft Platform front-rear elevation.
+	*/
+	void goToVerticalPosition(double side_side, double fore_aft);
 	
 private :
 	int devicePointer;

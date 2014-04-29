@@ -8,8 +8,8 @@ using namespace std;
 
 int main(){
 int choice;
-//PTinterface p(9600, "/dev/ttyAMA0");
-PTinterface p(9600, "/dev/ttyUSB0");
+PTinterface p(9600, "/dev/ttyAMA0");
+//PTinterface p(9600, "/dev/ttyUSB0");
 p.VerifyHome();
 p.GotoHome();
 
@@ -28,6 +28,7 @@ while(1)
 		cout<< "13 - Initial Calibration"<<endl;
 		cout<< "14 - ReCalibrate"<<endl;
 		cout<< "15 - Get pan tilt limits"<<endl;
+		cout<< "16 - Go to vertical position"<<endl;
 		cin >> choice;
 		switch(choice)
 		{
@@ -72,11 +73,19 @@ while(1)
 				cout<<endl<<"The result is: "<<re<<endl;
 				break;
 			case 14:
-				p.recalibrate();
+				p.reCalibrate();
 				p.setDriftRate();
 				break;
 			case 15:
 				p.getPanTiltLimits();
+				break;
+			case 16:
+				double side, fr_rear;
+				cout<<"Enter side-side value :"<<endl;
+				cin >> side;
+				cout<<"Enter fore aft value :"<<endl;
+				cin >> fr_rear;
+				p.goToVerticalPosition(side,fr_rear);
 				break;
 		}
 	}

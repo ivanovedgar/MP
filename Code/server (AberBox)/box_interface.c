@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 
    inclinometer_init();
 
-   message = malloc(sizeof (char) * RCVMESSAGE);
+   message = (char*)malloc(sizeof (char) * RCVMESSAGE);
    /* --- Malloc the space to the required data --- */
 
    /* --- Set up the communication port information --- */
