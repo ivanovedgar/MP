@@ -1,19 +1,20 @@
 \chapter{Testing}
 
-Detailed descriptions of every test case are definitely not what is required here. What is important is to show that you adopted a sensible strategy that was, in principle, capable of testing the system adequately even if you did not have the time to test the system fully.Have you tested your system on ’real users’? For example, if your system is supposed to solve a problem for a business, then it would be appropriate to present your approach to involve the users in the testing process and to record the results that you obtained. Depending on the level of detail, it is likely that you would put any detailed results in an appendix.The following sections indicate some areas you might include. Other sections may be more appropriate to your project. 
+\section{PTU TASS library testing}
+\begin{landscape}
+\begin{center}
+\begin{table}[h]
+\begin{tabular}{|p{0.3cm}|p{2cm}|p{4cm}|p{4cm}|p{5.4cm}|p{0.9cm}|p{4cm}|}
+\hline
+ID &  Requirement & Description &  Input &  Expected output & Pass/ Fail & Comment  \\ \hline
+1 & FR1 & Test PTU connection and initialization & Connect to PTU and perform fast initialization &  PTU platform should rotate to identify its limits  & P &  \\ \hline
+2 &  FR2 & Send tilt Up/Down commands to the PTU&  "TU/TD" commands are sent  &  PTU platform should tilt UP/Down  & P &  \\ \hline
+3 & FR3 & Send pan Left/Right commands to the PTU & "PL/PR" commands are sent & PTU platform should pan UP/Down  & P & \\ \hline
+4 & FR4 &  Keep platform stabilized. & "HI" command is sent to the PTU. & PTU should adjust platform position to keep it vertical when whole unit is tilted.  & P & Platform position changes when whole unit is tilted. \\ \hline
+5 & FR5 & Send drift rate to the PTU & "*mr\textit{f,f}" command is sent. & Platform is stabilized with the given drift rate  & P &  \\ \hline
+6 & FR6 &  & Platform is stabilized with the given drift rate  & P &  \\ \hline
 
-\section{Overall Approach to Testing}
-
-\section{Automated Testing}
-
-\subsection{Unit Tests}
-
-\subsection{User Interface Testing}
-
-\subsection{Stress Testing}
-
-\subsection{Other types of testing}
-
-\section{Integration Testing}
-
-\section{User Testing}
+\end{tabular}
+\end{table}
+\end{center}
+\end{landscape}
