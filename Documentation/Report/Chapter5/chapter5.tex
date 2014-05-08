@@ -1,16 +1,31 @@
 \chapter{Evaluation}
-\chapter{Relevance to the degree}
+\section*{Relevance to the degree}
 My degree scheme primary focus is to teach programming for the embedded and micro devices with limited processing power and hardware capabilities. It also focuses on teaching the right hardware choice for a particular task.
 
-This project perfectly suited my degree scheme. It had both hardware and software parts. My work involved dealing with the micro computer with limited power capabilities. It had stages where I needed to learn different interface connections such $I^2C$ and serial RS-232.    
+This project perfectly suited my degree scheme. It had both hardware and software parts. My work involved dealing with the micro computer with limited power capabilities. It had stages where I needed to learn different interface connections such as $I^2C$ and serial RS-232. I gained some experience working with a GPIO14 chip. Although this was not the main aim of the project, but learning how GPIO14 chip works and that in reality it is just a micro controller was a desired experience of mine for a very long time.  In this project I tackled a real world problem. I was developing solution to calculate and compensate drift rate of the Pan-Tilt Unit. Although in overall project didn't present a very complex problem there was quite a lot of work to be done with the code porting and in particular the background reading. I learned that background is a continuous process and can not be locked down to some specific point in time. After performing most of my initial research I would still come across new methods that could be incorporated and have to rewrite a part of my background research. 
 
-\chapter{Client and real world problem}
-In this project I tackled the real world problem. I was developing solution to  The project supervisor was my client at the same time so that I could ask questions  
+\section*{The Project Requirements}
+This project had quite a few functional requirements for the final system. At the end most of them were fulfilled  First of all the system that works on the new platform. This requirement was achieved and system worked very well on the new platform. It could acquire sensible data from the inclinometer, switch on and off relays and accept client connections over the network. The main problem in porting code was the different implementation of the $I^2C$ bus on the Raspberry Pi. The $I^2C$ bus was required to talk to the GPIO14 chip, which in turn provided access to the inclinometer and relays. After the necessary library was found and installed code required a few to tweaks to make it work. Although this solution sounds trivial it required examination of the current code and understanding how it work to be able replace right functions and modify them accordingly.  
+
+The next requirement was to implement support for the new commands in the PTU TASS library. The implementation of new commands was not that difficult, but again it required to consult corresponding PTU documentation to find out about the protocol used as well as examine the present implementation to be consistent while adding new functionality. It took some time to understand the protocol, how the messages are composed and that data inside them needs to be presented in the ASCII encoding, something that took a little wile to understand although supposed to be straightforward.
+
+The drift rate calculation was more about mathematics and right algorithm development. Probably this was the most easiest part of the project since by that time I had all the necessary knowledge of the system internals and could concentrate on the coding rather than learning something new. 
+
+It is sad that I run out of time and didn't integrated support of the new library functionality in to the main control system. However I think this is not the most critical part of the project since it could be fixed within a week or so. The real achievement is the fact that it was possible to develop the right algorithm for the drift rate calculation and that it proved to be working when stabilizing the PTU with the drift compensation. Before the practical testing was conducted it was unknown whether the calculations will be precise enough to cancel the drift. In the end the drift compensation works fine and PTU platform can stay vertical for at least 10 minutes before the drift changes and needs to be recalculated.
+
+In overall project succeeded in achieving its main task: the PTU stabilization with drift compensation. There are some missing bits but they do not form the core of the project and as it was mentioned could be fixed within a short time.
+
+
+\section*{Technology}
+On of the main challenges was the mastering of the new technologies such as C++, Raspberry Pi configuration, use of the $I^2C$ bus and RS-232 serial interface. The C++ is object oriented programming language the same as Java. Although I had extensive knowledge of Java gained in the previous years, the C++ was different. Of course the paradigm of the classes and objects with inheritance and polymorphism is the same as in Java. However the definition of the classes was different with the introduction of the destructor's, public and private sections instead of tagging each individual function or variable. The class definition only contained the declarations of the methods and actual implementations were listed separately. To modify the function arguments I would need to use pointers.   
+
+\section*{Process and method}   
+The Feature Driven Development methodology chosen to manage the project was efficient    
 
 
 
-\section{Process and method}
-\Section{Were you using technology you were familiar with or technology that was new to you?}
+
+\section{Were you using technology you were familiar with or technology that was new to you?}
 
 summarize what you have achieved in comparison with the original project aims 
 assess critically the work that you have carried out
