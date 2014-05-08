@@ -48,16 +48,31 @@
 \pagenumbering{roman}
 
 % This is the front page
-\include{cover}                        
+\include{cover}
+\newpage 
+\thispagestyle{empty}
+\mbox{}                        
 
 % Set up page numbering
 \pagestyle{empty}
 
 % declarations of originality 
-\include{declaration}               
+\include{declaration}
+\newpage 
+\thispagestyle{empty}
+\mbox{}               
 
-%\include{acknowledgements} % Acknowledgements
+\include{acknowledgements} % Acknowledgements
+\newpage 
+\thispagestyle{empty}
+\mbox{}
 \include{abstract}                 % Abstract
+\newpage 
+\thispagestyle{empty}
+\mbox{}
+\newpage 
+\thispagestyle{empty}
+\mbox{}
 
 \pagenumbering{roman}
 \pagestyle{fancy}
@@ -68,10 +83,10 @@
 
 \tableofcontents   
 \newpage
-%\listoffigures
-%\newpage 
-%\listoftables
-%\newpage
+\listoffigures
+\newpage 
+\listoftables
+\newpage
 
 % Set up page numbering
 \pagenumbering{arabic}
@@ -111,7 +126,7 @@
 
 % include any appendices here
 \include{Appendix1/appendix1}
-\include{Appendix2/appendix2}
+%\include{Appendix2/appendix2}
 
 \fancypagestyle{plain}{%
    \fancyhead{} %[C]{Annotated Bibliography}

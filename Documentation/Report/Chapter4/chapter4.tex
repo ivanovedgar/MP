@@ -1,20 +1,89 @@
 \chapter{Testing}
+System testing is an investigation conducted to demonstrate that the final system meets the requirements set at the beginning of the project, works as expected and satisfies the needs of the client.
 
-\section{PTU TASS library testing}
+Although the final system was not build, the separate parts of it were tested at the end of each iteration. In this chapter testing of the following parts will be presented:
+
+\begin{itemize}
+\item Successful system porting.
+\item PTU TASS library new functionality.
+\item Drift rate calculation. 
+\end{itemize}
+
+For the purpose of this project the specification-based testing method will be used. This method is a part of the black-box testing technique. In the black-box technique the system tester has no knowledge about the system internals and function implementations. The aim of the specification based testing is to tests functionality of the system based on the requirements and specifications outlined at the planning stage. Although such testing type is considered insufficient to guard against complex or high-risk situations ~\cite{RiskandRequirementsBasedTesting}, it is believed to be enough to test the completed parts of the overall system in this project. First of all implementation of the new functionality and code porting doest not present a highly complex task with loads of coding, where more thorough testing would be required. Secondly as it is with PTU TASS library the only practical way to test new functions is by invoking control functions and observing behaviour of the Pan-Tilt Unit. The unit testing was considered at the initial stages of the project, however after the implementation stage it became apparent that there is not that much new code and it is not that complex to write unit tests for it.    
+
+The tests will be build around specifications and requirements outlined in at the planing stage. Majority of the functions tested will be triggering some action of the real hardware. As such majority of tests will concentrate on observing the hardware behaviour and noting it down.
+
+All the tests were conducted on the Raspberry Pi minicomputer running the Raspbian OS. The only exception was a client side application running on the Windows 7 OS based laptop and connecting to the server side application. During the testing Raspberry Pi was managed over the network using the SSH protocol from the laptop running Windows 7 OS,  systems were connected using direct LAN connection and were configured with the static IP addresses.
+
+\section{Ported System Testing}
+The table ~\ref{tab:Ported_System_Testing} reflects the testing carried out to ensure that the ported code from the Gumstix to the Raspberry Pi has its original functionality working. 
+
+\section{PTU TASS library testing} 
+The table ~\ref{tab:PTUlibraryTestingTable} presents tests carried out on the PTU TASS library to ensure that the new functionality is implemented right and works well. The functionality of the basic commands were tested as well to ensure that they still work after migrating to the new platform. Table contains description of the test, input data supplied or function triggered, expected output or system behaviour. After executing a test, the decision is defined according to the following rules: P -Pass, F - Fail. Any comments are in the comment box. FR - refers to the functional requirement set at the planning stage
+
+\section{Stabilization with drift compensation testing}
+On the table ~\ref{tab:Stabilization_with_drift_compensation_testing} there are present results of stabilization with drift compensation testing. The purpose of this testing is to ensure that drift rate calculation works correctly and platform doesn't drift or drift insignificantly over the short period of time (~10 minutes). 
 \begin{landscape}
 \begin{center}
 \begin{table}[h]
+
 \begin{tabular}{|p{0.3cm}|p{2cm}|p{4cm}|p{4cm}|p{5.4cm}|p{0.9cm}|p{4cm}|}
 \hline
 ID &  Requirement & Description &  Input &  Expected output & Pass/ Fail & Comment  \\ \hline
-1 & FR1 & Test PTU connection and initialization & Connect to PTU and perform fast initialization &  PTU platform should rotate to identify its limits  & P &  \\ \hline
-2 &  FR2 & Send tilt Up/Down commands to the PTU&  "TU/TD" commands are sent  &  PTU platform should tilt UP/Down  & P &  \\ \hline
-3 & FR3 & Send pan Left/Right commands to the PTU & "PL/PR" commands are sent & PTU platform should pan UP/Down  & P & \\ \hline
-4 & FR4 &  Keep platform stabilized. & "HI" command is sent to the PTU. & PTU should adjust platform position to keep it vertical when whole unit is tilted.  & P & Platform position changes when whole unit is tilted. \\ \hline
-5 & FR5 & Send drift rate to the PTU & "*mr\textit{f,f}" command is sent. & Platform is stabilized with the given drift rate  & P &  \\ \hline
-6 & FR6 &  & Platform is stabilized with the given drift rate  & P &  \\ \hline
+1& FR1& Code can be compiled and run on the new system& N/A & Code compiles successfully and application is running & P &  \\ \hline
+2& FR2& Client is able to connect to the server& Client initiates the connection& The server side application should handle client and respond to the commands& P& \\ \hline
+3& FR3& Inclinometer values can be retrieved on the server& N/A& Values from the inclinometer should reflect its inclination angles on the both axes& P& \\ \hline
+4& FR4& Inclinometer values are sent to the client& Appropriate command on the client is invoked& Inclinometer values should be the same as on the server& F& When arriving to the client data is either corrupt or not sent correctly \\ \hline
+5& FR5& Relay statuses can be retrieved by the client from the server& Appropriate command on the client is invoked& Server should return number where relay statuses are encoded& P& \\ \hline
+6& FR6& Set/Reset specific relay& Appropriate command on the client is invoked and relay number N is supplied& Relay N is either turned on/off& P& There is a clicking noise when the relay is turned on/off as well as light indicating current status \\ \hline 
+7& FR7& Get status of the specific relay& Appropriate command on the client is invoked and relay number N is supplied& The server should return 1 if relay is turned on or 0 if not& P& \\ \hline
 
 \end{tabular}
+\caption {Ported System Functionality Testing} \label{tab:Ported_System_Testing}
 \end{table}
 \end{center}
 \end{landscape}
+
+
+\begin{landscape}
+\begin{center}
+\begin{table}[h]
+
+\begin{tabular}{|p{0.3cm}|p{2cm}|p{4cm}|p{4cm}|p{5.4cm}|p{0.9cm}|p{4cm}|}
+\hline
+ID &  Requirement & Description &  Input &  Expected output & Pass/ Fail & Comment  \\ \hline
+1& FR1 & Connect to the PTU, perform fast initialization, go to Home position& \texttt{connect, fastInit} and \texttt{goHome} functions are called &  PTU platform should rotate to identify its limits and go the Home position&P &  \\ \hline
+2& FR2& Command the PTU to tilt Up/Down& Corresponding functions are called& PTU platform should tilt UP/Down& P&  \\ \hline
+3& FR3& Command the PTU to pan Left/Right& Corresponding functions are called& PTU platform should pan Left/Right& P& \\ \hline
+4& FR4& Keep platform stabilized& Stabilize function is called& PTU should adjust platform position to keep it vertical when the whole unit is tilted& P& Platform position changes when whole unit is tilted\\ \hline
+5& FR5& Send drift rate to the PTU & Corresponding function is called with data from the inclinometer supplied as arguments& When stabilized platform starts to move at the given rate & P&  \\ \hline
+6 & FR6 &  & Platform is stabilized with the given drift rate  &  &  &\\ \hline
+
+\end{tabular}
+\caption {PTU TASS library testing} \label{tab:PTUlibraryTestingTable}
+\end{table}
+\end{center}
+\end{landscape}
+
+\begin{landscape}
+\begin{center}
+\begin{table}[h]
+
+\begin{tabular}{|p{0.3cm}|p{2cm}|p{4cm}|p{4cm}|p{5.4cm}|p{0.9cm}|p{4cm}|}
+\hline
+ID &  Requirement & Description &  Input &  Expected output & Pass/ Fail & Comment  \\ \hline
+1& FR7.1& Initial drift rate calculation& Appropriate function is called &  PTU platform should drift over the specified amount of time and then return to the home position& P &  \\ \hline
+2& FR7.2& Stabilize platform with the drift rate calculated at the previous step& Stabilize function is called first, then the drift rate is applied& The platform should not drift or drift insignificantly& P& Although the drift still exists it is much lower  \\ \hline
+3& FR8.1& Drift rate calibration for the platform with fixed position& Appropriate function is called and new drift rate calculated& N/A& P & The function is supposed to recalculate and adjust current drift rate \\ \hline
+4& FR8.2& Apply drift rate calculated at the previous step& Appropriate function is invoked& If the drift rate was calculated correctly the PTU should not drift or drift less& P & \\ \hline
+5& FR8.3& Drift rate calibration based on the data from the inclinometer& The PTU is physically tilted and appropriate drift calibration function is invoked& N/A& P& The function is supposed to recalculate and adjust current drift rate\\ \hline 
+6& FR8.4& Apply drift rate calculated at the previous step& Appropriate function is invoked& If the drift rate was calculated correctly the PTU should not drift or drift les& P & \\ \hline
+
+\end{tabular}
+\caption {Stabilization with drift compensation testing} \label{tab:Stabilization_with_drift_compensation_testing}
+\end{table}
+\end{center}
+\end{landscape}
+
+\section{Functional Requirements}
+The functional requirements outline what
