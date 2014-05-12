@@ -651,12 +651,12 @@ bool PTinterface::reCalibrateWithInclinometer(double side_side, double fore_aft)
 	int currentTime = time(0);		
 	int timeDifference = difftime(currentTime,PTUDriftRate.StabilizationTime);
 	
-	if(((currentPan > -39.00)&&(currentPan <39.00))&&((currentTilt > -19.00)||(currentTilt < 19.00))){
+	if(((currentPan > -39.00)&&(currentPan <39.00))&&((currentTilt > -19.00)&&(currentTilt < 19.00))){
 		int currentTime = time(0);		
 		int timeDifference = difftime(currentTime,PTUDriftRate.StabilizationTime);
 
-		PTUDriftRate.panDriftRate += getDriftRate(side_side,currentPan,timeDifference);
-		PTUDriftRate.tiltDriftRate += getDriftRate(fore_aft,currentTilt,timeDifference);
+		PTUDriftRate.panDriftRate += getDriftRate(side_side,currentPan,timeDifference); //assuming that we want vertical position.
+		PTUDriftRate.tiltDriftRate += getDriftRate(fore_aft,currentTilt,timeDifference); //same here
 		
 		PTUDriftRate.StabilizationTime = currentTime;
 		result = true;
